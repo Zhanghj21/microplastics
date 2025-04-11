@@ -209,8 +209,7 @@ export default {
     }
 
     const restart = () => {
-      store.commit('resetAllData')
-      router.push('/water-source')
+      router.push('/')
     }
 
     return {

@@ -4,10 +4,15 @@
     <div class="banner">
       <div class="banner-content">
         <div class="logo">
-          <span class="icon">🌊</span>
+          <span class="icon">🔬</span>
           <h1>微塑料健康评估</h1>
         </div>
-        <p class="slogan">关注健康，从了解微塑料开始</p>
+        <div class="language-selector">
+          <select v-model="selectedLanguage" @change="changeLanguage">
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -63,24 +68,27 @@ export default {
   setup() {
     const route = useRoute()
     const mainContent = ref(null)
+    const selectedLanguage = ref('zh')
     
     const routeSteps = {
-      'water-source': 1,
+      'introduction': 0,
+      'watersource': 1,
       'food': 2,
       'air': 3,
-      'daily-items': 4,
+      'dailyitems': 4,
       'clothing': 5,
-      'living-area': 6,
+      'livingarea': 6,
       'diet': 7,
       'result': 8
     }
 
     const currentStep = computed(() => {
-      return routeSteps[route.name?.toLowerCase()] || 1
+      const step = routeSteps[route.name?.toLowerCase()] || 0
+      return step > 0 ? step : 0
     })
 
     const progressWidth = computed(() => {
-      return (currentStep.value / 7) * 100
+      return currentStep.value > 0 ? (currentStep.value / 7) * 100 : 0
     })
 
     const scrollToTop = () => {
@@ -90,11 +98,18 @@ export default {
       window.scrollTo(0, 0)
     }
 
+    const changeLanguage = () => {
+      // 这里可以添加语言切换的逻辑
+      console.log('Language changed to:', selectedLanguage.value)
+    }
+
     return {
       currentStep,
       progressWidth,
       mainContent,
-      scrollToTop
+      scrollToTop,
+      selectedLanguage,
+      changeLanguage
     }
   }
 }
@@ -137,8 +152,10 @@ body {
   color: white;
   padding: 20px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 100;
 }
 
@@ -146,37 +163,60 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .icon {
-  font-size: 2.5rem;
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo h1 {
   margin: 0;
-  font-size: var(--font-size-xxl);
+  font-size: var(--font-size-xl);
   font-weight: bold;
+  padding: 8px 0;
 }
 
-.slogan {
-  margin: 10px 0 0;
-  font-size: var(--font-size-xl);
-  opacity: 0.9;
+.language-selector {
+  margin-left: auto;
+}
+
+.language-selector select {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  outline: none;
+}
+
+.language-selector select option {
+  background: var(--tiffany-dark);
+  color: white;
 }
 
 /* 主要内容区域 */
 .main-content {
   flex: 1 0 auto;
   padding: 20px;
-  margin-top: 20px;
+  margin-top: 100px; /* 减小顶部边距，因为banner高度减小了 */
   margin-bottom: 40px;
   min-height: auto;
   overflow-y: auto;
@@ -246,13 +286,13 @@ body {
 /* 进度条样式 */
 .progress-bar {
   position: fixed;
-  top: 0;
+  top: 85px; /* 向下移动进度条 */
   left: 0;
   width: 100%;
   height: 4px;
   background: rgba(129, 216, 208, 0.2);
   z-index: 1000;
-  display: v-bind("currentStep < 8 ? 'block' : 'none'");
+  display: v-bind("currentStep > 0 && currentStep < 8 ? 'block' : 'none'");
 }
 
 .progress {
@@ -263,14 +303,14 @@ body {
 
 .page-indicator {
   position: fixed;
-  top: 10px;
+  top: 95px; /* 相应调整页码指示器的位置 */
   right: 20px;
   background: var(--tiffany-dark);
   color: white;
   padding: 6px 16px;
   border-radius: 15px;
   font-size: var(--font-size-lg);
-  display: v-bind("currentStep < 8 ? 'block' : 'none'");
+  display: v-bind("currentStep > 0 && currentStep < 8 ? 'block' : 'none'");
 }
 
 /* 页面过渡动画 */
@@ -319,16 +359,29 @@ p {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .banner-content {
-    padding: 10px;
+  :root {
+    --font-size-base: 12px;
+    --font-size-lg: 14px;
+    --font-size-xl: 16px;
+    --font-size-xxl: 20px;
+  }
+
+  .banner {
+    padding: 15px 0;
   }
 
   .logo h1 {
-    font-size: var(--font-size-xl);
+    padding: 5px 0;
+  }
+
+  .language-selector select {
+    font-size: var(--font-size-base);
+    padding: 2px 4px;
   }
 
   .main-content {
     padding: 10px;
+    margin-top: 80px; /* 减小移动端的顶部边距 */
     margin-bottom: 20px;
   }
 
@@ -344,6 +397,16 @@ p {
 
   .footer-links {
     align-items: center;
+  }
+
+  .page-indicator {
+    font-size: var(--font-size-base);
+    padding: 2px 8px;
+    top: 75px; /* 调整移动端进度条位置 */
+  }
+
+  .progress-bar {
+    top: 65px; /* 调整移动端进度条位置 */
   }
 }
 </style> 

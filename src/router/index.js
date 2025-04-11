@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import Introduction from '../views/Introduction.vue'
 import WaterSource from '../views/WaterSource.vue'
 import Food from '../views/Food.vue'
 import Air from '../views/Air.vue'
@@ -11,7 +12,8 @@ import Result from '../views/Result.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/water-source'
+    name: 'Introduction',
+    component: Introduction
   },
   {
     path: '/water-source',

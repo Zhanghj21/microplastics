@@ -1,53 +1,201 @@
 <template>
   <div class="survey-page">
     <div class="page-header">
-      <span class="page-number">2️⃣</span>
-      <h2>食品摄入</h2>
+      <h2>第二部分：食品摄入</h2>
     </div>
     
     <div class="info-card">
-      <h3>提示内容</h3>
-      <p>请输入您每月摄入以下食品的数量：</p>
-      <div class="info-list">
-        <div class="info-item">
-          <span class="dot"></span>
-          <p>牛奶：每升含 <strong>40</strong> 个微塑料</p>
+      <div class="card-header">
+        <h3>食品摄入量说明</h3>
+      </div>
+      <div class="card-content">
+        <p class="intro-text">请输入日常摄入的各类食物数量，单位为克（g）：</p>
+        <div class="info-list">
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">牛奶/软饮料</p>
+              <p class="item-subtitle">（如牛奶、碳酸饮料、果汁等）</p>
+              <p class="item-data">每升含 <strong>40</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">外卖容器内食物</p>
+              <p class="item-subtitle">（如外卖盒饭、打包食物等）</p>
+              <p class="item-data">每升含 <strong>68,000</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">蜂蜜</p>
+              <p class="item-subtitle">（如蜂蜜、蜂王浆等）</p>
+              <p class="item-data">每千克含 <strong>166</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">糖</p>
+              <p class="item-subtitle">（如白砂糖、红糖等）</p>
+              <p class="item-data">每千克含 <strong>217</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">食盐（海盐）</p>
+              <p class="item-subtitle">（如海盐、食用盐等）</p>
+              <p class="item-data">每千克含 <strong>615.5</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">生米</p>
+              <p class="item-subtitle">（如普通大米、糙米等）</p>
+              <p class="item-data">每100克含 <strong>712</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">速熟米（即食类）</p>
+              <p class="item-subtitle">（如即食米饭、方便米饭等）</p>
+              <p class="item-data">每100克含 <strong>2,560</strong> 个微塑料</p>
+            </div>
+          </div>
         </div>
-        <div class="info-item">
-          <span class="dot"></span>
-          <p>外卖：每份含 <strong>68,000</strong> 个微塑料</p>
-        </div>
-        <!-- 其他食品项 -->
       </div>
     </div>
 
     <div class="input-section">
       <div class="input-group">
-        <label>牛奶（升/月）</label>
-        <div class="input-wrapper">
-          <input 
-            type="text" 
-            v-model="foodData.milk"
-            placeholder="每月饮用牛奶量"
-            @input="validateInput('milk')"
-          />
-          <span class="unit">L</span>
+        <label>牛奶/软饮料（L）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="foodData.milk"
+              placeholder="如牛奶、碳酸饮料、果汁等"
+              @input="validateInput('milk')"
+            />
+            <span class="unit">L</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：普通瓶装饮料为500ml-1L，大瓶装为1.5L-2L，一盒牛奶通常为250ml</p>
+          </div>
         </div>
         <span class="error-message" v-if="errors.milk">{{ errors.milk }}</span>
       </div>
 
       <div class="input-group">
-        <label>外卖（份/月）</label>
-        <div class="input-wrapper">
-          <input 
-            type="text" 
-            v-model="foodData.takeaway"
-            placeholder="每月外卖份数"
-            @input="validateInput('takeaway')"
-          />
-          <span class="unit">份</span>
+        <label>外卖容器内食物（L）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="foodData.takeaway"
+              placeholder="如外卖盒饭、打包食物等"
+              @input="validateInput('takeaway')"
+            />
+            <span class="unit">L</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：普通外卖盒容量约为0.5L-1L，大份外卖约为1.5L-2L</p>
+          </div>
         </div>
         <span class="error-message" v-if="errors.takeaway">{{ errors.takeaway }}</span>
+      </div>
+
+      <div class="input-group">
+        <label>蜂蜜（kg）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="foodData.honey"
+              placeholder="如蜂蜜、蜂王浆等"
+              @input="validateInput('honey')"
+            />
+            <span class="unit">kg</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：普通蜂蜜瓶装为500g-1kg，小包装为100g-250g</p>
+          </div>
+        </div>
+        <span class="error-message" v-if="errors.honey">{{ errors.honey }}</span>
+      </div>
+
+      <div class="input-group">
+        <label>糖（kg）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="foodData.sugar"
+              placeholder="如白砂糖、红糖等"
+              @input="validateInput('sugar')"
+            />
+            <span class="unit">kg</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：普通糖包为5g-10g，家庭装为500g-1kg</p>
+          </div>
+        </div>
+        <span class="error-message" v-if="errors.sugar">{{ errors.sugar }}</span>
+      </div>
+
+      <div class="input-group">
+        <label>食盐（海盐）（kg）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="foodData.salt"
+              placeholder="如海盐、食用盐等"
+              @input="validateInput('salt')"
+            />
+            <span class="unit">kg</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：普通盐包为5g-10g，家庭装为500g-1kg，成年人每日建议摄入量不超过6g</p>
+          </div>
+        </div>
+        <span class="error-message" v-if="errors.salt">{{ errors.salt }}</span>
+      </div>
+
+      <div class="input-group">
+        <label>生米（g）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="foodData.rice"
+              placeholder="如普通大米、糙米等"
+              @input="validateInput('rice')"
+            />
+            <span class="unit">g</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：一碗米饭约150g-200g，一袋大米通常为5kg-10kg</p>
+          </div>
+        </div>
+        <span class="error-message" v-if="errors.rice">{{ errors.rice }}</span>
+      </div>
+
+      <div class="input-group">
+        <label>速熟米（g）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="foodData.instantRice"
+              placeholder="如即食米饭、方便米饭等"
+              @input="validateInput('instantRice')"
+            />
+            <span class="unit">g</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：一包速熟米通常为100g-200g，即食米饭盒装约为200g-300g</p>
+          </div>
+        </div>
+        <span class="error-message" v-if="errors.instantRice">{{ errors.instantRice }}</span>
       </div>
     </div>
 
@@ -71,12 +219,22 @@ export default {
     
     const foodData = reactive({
       milk: store.state.foodData.milk,
-      takeaway: store.state.foodData.takeaway
+      takeaway: store.state.foodData.takeaway,
+      honey: store.state.foodData.honey,
+      sugar: store.state.foodData.sugar,
+      salt: store.state.foodData.salt,
+      rice: store.state.foodData.rice,
+      instantRice: store.state.foodData.instantRice
     })
 
     const errors = reactive({
       milk: '',
-      takeaway: ''
+      takeaway: '',
+      honey: '',
+      sugar: '',
+      salt: '',
+      rice: '',
+      instantRice: ''
     })
 
     const validateInput = (field) => {
@@ -126,12 +284,27 @@ export default {
 .page-header {
   text-align: center;
   margin-bottom: 30px;
+  position: relative;
 }
 
-.page-number {
-  font-size: 2.2rem;
+.page-header h2 {
+  font-size: var(--font-size-xl);
   color: var(--tiffany-dark);
-  margin-right: 15px;
+  margin: 0;
+  padding: 10px 0;
+  position: relative;
+  display: inline-block;
+}
+
+.page-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: var(--tiffany-blue);
 }
 
 .navigation-buttons {
@@ -158,5 +331,104 @@ export default {
   background: white;
   border: 2px solid var(--tiffany-blue);
   color: var(--tiffany-blue);
+}
+
+.info-card {
+  background: white;
+  border-radius: 15px;
+  padding: 0;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.card-header {
+  background: var(--tiffany-blue);
+  padding: 20px;
+  text-align: center;
+}
+
+.card-header h3 {
+  color: white;
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.card-content {
+  padding: 25px;
+}
+
+.intro-text {
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.info-item {
+  margin-bottom: 20px;
+  background: rgba(129, 216, 208, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.item-content {
+  margin-left: 0;
+}
+
+.item-title {
+  font-size: 1.1em;
+  color: var(--tiffany-dark);
+  margin: 0 0 5px 0;
+  font-weight: bold;
+}
+
+.item-subtitle {
+  color: var(--text-secondary);
+  margin: 0 0 8px 0;
+  font-size: 0.9em;
+}
+
+.item-data {
+  font-size: 1em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reference {
+  background: rgba(129, 216, 208, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+.reference p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+  .input-row {
+    gap: 8px;
+  }
+
+  .reference {
+    padding: 8px;
+  }
+
+  .reference p {
+    font-size: 0.8em;
+  }
 }
 </style> 

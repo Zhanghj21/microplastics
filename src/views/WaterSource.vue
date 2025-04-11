@@ -1,68 +1,95 @@
 <template>
   <div class="survey-page">
     <div class="page-header">
-      <span class="page-number">1️⃣</span>
-      <h2>环境水源</h2>
+      <h2>第一部分：环境水源</h2>
     </div>
     
     <div class="info-card">
-      <h3>提示内容</h3>
-      <p>请输入日常摄入的三种类型水源的摄入量，单位分别为立方米（m³）或升（L）：</p>
-      <div class="info-list">
-        <div class="info-item">
-          <span class="dot"></span>
-          <p><strong>标准水源水</strong>（如纯净水、净化水）：每立方米含 <strong>2,200</strong> 个微塑料</p>
-        </div>
-        <div class="info-item">
-          <span class="dot"></span>
-          <p><strong>未经处理的水</strong>（如山泉水、井水）：每升平均含 <strong>3,307.5</strong> 个微塑料</p>
-        </div>
-        <div class="info-item">
-          <span class="dot"></span>
-          <p><strong>处理后的水</strong>（如市政自来水）：每升平均含 <strong>465.5</strong> 个微塑料</p>
+      <div class="card-header">
+        <h3>水源摄入量说明</h3>
+      </div>
+      <div class="card-content">
+        <p class="intro-text">请输入日常摄入的三种类型水源的摄入量，单位分别为立方米（m³）或升（L）：</p>
+        <div class="info-list">
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">标准水源水</p>
+              <p class="item-subtitle">（如纯净水、净化水）</p>
+              <p class="item-data">每立方米含 <strong>2,200</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">未经处理的水</p>
+              <p class="item-subtitle">（如山泉水、井水）</p>
+              <p class="item-data">每升平均含 <strong>3,307.5</strong> 个微塑料</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="item-content">
+              <p class="item-title">处理后的水</p>
+              <p class="item-subtitle">（如市政自来水）</p>
+              <p class="item-data">每升平均含 <strong>465.5</strong> 个微塑料</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="input-section">
       <div class="input-group">
-        <label>标准水源水</label>
-        <div class="input-wrapper">
-          <input 
-            type="text" 
-            v-model="waterData.purified"
-            placeholder="如纯净水、净化水"
-            @input="validateInput('purified')"
-          />
-          <span class="unit">m³</span>
+        <label>标准水源水（m³）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="waterData.purified"
+              placeholder="如纯净水、净化水"
+              @input="validateInput('purified')"
+            />
+            <span class="unit">m³</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：1立方米 = 1000升，相当于约500瓶2L装矿泉水</p>
+          </div>
         </div>
         <span class="error-message" v-if="errors.purified">{{ errors.purified }}</span>
       </div>
 
       <div class="input-group">
-        <label>未经处理的水</label>
-        <div class="input-wrapper">
-          <input 
-            type="text" 
-            v-model="waterData.untreated"
-            placeholder="如山泉水、井水"
-            @input="validateInput('untreated')"
-          />
-          <span class="unit">L</span>
+        <label>未经处理的水（L）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="waterData.untreated"
+              placeholder="如山泉水、井水"
+              @input="validateInput('untreated')"
+            />
+            <span class="unit">L</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：普通矿泉水瓶容量为500ml-1L，大瓶装为1.5L-2L</p>
+          </div>
         </div>
         <span class="error-message" v-if="errors.untreated">{{ errors.untreated }}</span>
       </div>
 
       <div class="input-group">
-        <label>处理后的水</label>
-        <div class="input-wrapper">
-          <input 
-            type="text" 
-            v-model="waterData.treated"
-            placeholder="如市政自来水"
-            @input="validateInput('treated')"
-          />
-          <span class="unit">L</span>
+        <label>处理后的水（L）</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              v-model="waterData.treated"
+              placeholder="如市政自来水"
+              @input="validateInput('treated')"
+            />
+            <span class="unit">L</span>
+          </div>
+          <div class="reference">
+            <p>💡 参考：成年人每天建议饮水量为1.5-2L，相当于3-4瓶500ml矿泉水</p>
+          </div>
         </div>
         <span class="error-message" v-if="errors.treated">{{ errors.treated }}</span>
       </div>
@@ -140,12 +167,93 @@ export default {
 .page-header {
   text-align: center;
   margin-bottom: 30px;
+  position: relative;
 }
 
-.page-number {
-  font-size: 2.2rem;
+.page-header h2 {
+  font-size: var(--font-size-xl);
   color: var(--tiffany-dark);
-  margin-right: 15px;
+  margin: 0;
+  padding: 10px 0;
+  position: relative;
+  display: inline-block;
+}
+
+.page-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: var(--tiffany-blue);
+}
+
+.info-card {
+  background: white;
+  border-radius: 15px;
+  padding: 0;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.card-header {
+  background: var(--tiffany-blue);
+  padding: 20px;
+  text-align: center;
+}
+
+.card-header h3 {
+  color: white;
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.card-content {
+  padding: 25px;
+}
+
+.intro-text {
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.info-item {
+  margin-bottom: 20px;
+  background: rgba(129, 216, 208, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.item-content {
+  margin-left: 0;
+}
+
+.item-title {
+  font-size: 1.1em;
+  color: var(--tiffany-dark);
+  margin: 0 0 5px 0;
+  font-weight: bold;
+}
+
+.item-subtitle {
+  color: var(--text-secondary);
+  margin: 0 0 8px 0;
+  font-size: 0.9em;
+}
+
+.item-data {
+  font-size: 1em;
+  color: var(--text-primary);
+  margin: 0;
 }
 
 .navigation-buttons {
@@ -185,10 +293,17 @@ export default {
   margin-bottom: 0;
 }
 
+.input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 input {
@@ -218,6 +333,20 @@ input:focus {
   margin-top: 5px;
 }
 
+.reference {
+  width: 100%;
+  padding: 12px 15px;
+  background: rgba(129, 216, 208, 0.1);
+  border-radius: 8px;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.reference p {
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .survey-page {
     padding: 15px;
@@ -237,6 +366,30 @@ input:focus {
 
   .next-button {
     width: 100%;
+  }
+
+  .input-row {
+    gap: 8px;
+  }
+
+  .reference {
+    width: 100%;
+  }
+
+  .card-content {
+    padding: 15px;
+  }
+  
+  .info-item {
+    padding: 12px;
+  }
+  
+  .item-title {
+    font-size: 1em;
+  }
+  
+  .item-subtitle {
+    font-size: 0.85em;
   }
 }
 </style> 
