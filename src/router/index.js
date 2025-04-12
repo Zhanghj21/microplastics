@@ -1,11 +1,10 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Introduction from '../views/Introduction.vue'
 import WaterSource from '../views/WaterSource.vue'
 import Food from '../views/Food.vue'
 import Air from '../views/Air.vue'
 import DailyItems from '../views/DailyItems.vue'
 import Clothing from '../views/Clothing.vue'
-import LivingArea from '../views/LivingArea.vue'
 import Diet from '../views/Diet.vue'
 import Result from '../views/Result.vue'
 
@@ -16,7 +15,7 @@ const routes = [
     component: Introduction
   },
   {
-    path: '/water-source',
+    path: '/water',
     name: 'WaterSource',
     component: WaterSource
   },
@@ -41,11 +40,6 @@ const routes = [
     component: Clothing
   },
   {
-    path: '/living-area',
-    name: 'LivingArea',
-    component: LivingArea
-  },
-  {
     path: '/diet',
     name: 'Diet',
     component: Diet
@@ -58,7 +52,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 

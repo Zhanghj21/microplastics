@@ -5,7 +5,7 @@
       <div class="intro-content">
         <div class="section">
           <h2>评估流程说明</h2>
-          <p>本评估系统共包含7个部分，每个部分都包含微塑料说明和表格填写两个环节。</p>
+          <p>本评估系统共包含6个部分，每个部分都包含微塑料说明和表格填写两个环节。</p>
           <div class="process-list">
             <div v-for="(item, index) in processItems" :key="index" class="process-item">
               <div class="process-header" @click="toggleItem(index)">
@@ -50,7 +50,7 @@ export default {
         isOpen: false
       },
       {
-        title: '食物摄入',
+        title: '食品摄入',
         description: '评估日常饮食中可能摄入的微塑料情况。',
         isOpen: false
       },
@@ -60,23 +60,18 @@ export default {
         isOpen: false
       },
       {
-        title: '个人护理',
-        description: '评估个人护理产品中的微塑料使用情况。',
+        title: '日用品释放',
+        description: '评估日常用品使用过程中释放的微塑料情况。',
         isOpen: false
       },
       {
-        title: '生活习惯',
-        description: '评估日常生活中的微塑料接触情况。',
+        title: '衣物与纺织品',
+        description: '评估衣物和纺织品使用过程中产生的微塑料情况。',
         isOpen: false
       },
       {
-        title: '健康状况',
-        description: '评估当前健康状况对微塑料暴露的影响。',
-        isOpen: false
-      },
-      {
-        title: '防护措施',
-        description: '评估现有的微塑料防护措施效果。',
+        title: '饮食习惯',
+        description: '评估饮食习惯对微塑料摄入的影响。',
         isOpen: false
       }
     ])
@@ -86,7 +81,7 @@ export default {
     }
 
     const startAssessment = () => {
-      router.push('/water-source')
+      router.push('/water')
     }
 
     return {

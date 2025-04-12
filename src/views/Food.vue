@@ -9,7 +9,7 @@
         <h3>食品摄入量说明</h3>
       </div>
       <div class="card-content">
-        <p class="intro-text">请输入日常摄入的各类食物数量，单位为克（g）：</p>
+        <p class="intro-text">请输入日常摄入的各类食物数量</p>
         <div class="info-list">
           <div class="info-item">
             <div class="item-content">
@@ -66,7 +66,7 @@
 
     <div class="input-section">
       <div class="input-group">
-        <label>牛奶/软饮料（L）</label>
+        <label>牛奶/软饮料（毫升/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -75,7 +75,7 @@
               placeholder="如牛奶、碳酸饮料、果汁等"
               @input="validateInput('milk')"
             />
-            <span class="unit">L</span>
+            <span class="unit">mL</span>
           </div>
           <div class="reference">
             <p>💡 参考：普通瓶装饮料为500ml-1L，大瓶装为1.5L-2L，一盒牛奶通常为250ml</p>
@@ -85,7 +85,7 @@
       </div>
 
       <div class="input-group">
-        <label>外卖容器内食物（L）</label>
+        <label>外卖容器内食物（升/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -104,7 +104,7 @@
       </div>
 
       <div class="input-group">
-        <label>蜂蜜（kg）</label>
+        <label>蜂蜜（克/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -113,7 +113,7 @@
               placeholder="如蜂蜜、蜂王浆等"
               @input="validateInput('honey')"
             />
-            <span class="unit">kg</span>
+            <span class="unit">g</span>
           </div>
           <div class="reference">
             <p>💡 参考：普通蜂蜜瓶装为500g-1kg，小包装为100g-250g</p>
@@ -123,7 +123,7 @@
       </div>
 
       <div class="input-group">
-        <label>糖（kg）</label>
+        <label>糖（克/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -132,7 +132,7 @@
               placeholder="如白砂糖、红糖等"
               @input="validateInput('sugar')"
             />
-            <span class="unit">kg</span>
+            <span class="unit">g</span>
           </div>
           <div class="reference">
             <p>💡 参考：普通糖包为5g-10g，家庭装为500g-1kg</p>
@@ -142,7 +142,7 @@
       </div>
 
       <div class="input-group">
-        <label>食盐（海盐）（kg）</label>
+        <label>食盐（海盐）（克/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -151,7 +151,7 @@
               placeholder="如海盐、食用盐等"
               @input="validateInput('salt')"
             />
-            <span class="unit">kg</span>
+            <span class="unit">g</span>
           </div>
           <div class="reference">
             <p>💡 参考：普通盐包为5g-10g，家庭装为500g-1kg，成年人每日建议摄入量不超过6g</p>
@@ -161,7 +161,7 @@
       </div>
 
       <div class="input-group">
-        <label>生米（g）</label>
+        <label>生米（克/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -180,7 +180,7 @@
       </div>
 
       <div class="input-group">
-        <label>速熟米（g）</label>
+        <label>速熟米（克/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -218,13 +218,13 @@ export default {
     const router = useRouter()
     
     const foodData = reactive({
-      milk: store.state.foodData.milk,
-      takeaway: store.state.foodData.takeaway,
-      honey: store.state.foodData.honey,
-      sugar: store.state.foodData.sugar,
-      salt: store.state.foodData.salt,
-      rice: store.state.foodData.rice,
-      instantRice: store.state.foodData.instantRice
+      milk: store.state.foodData.milk || '',
+      takeaway: store.state.foodData.takeaway || '',
+      honey: store.state.foodData.honey || '',
+      sugar: store.state.foodData.sugar || '',
+      salt: store.state.foodData.salt || '',
+      rice: store.state.foodData.rice || '',
+      instantRice: store.state.foodData.instantRice || ''
     })
 
     const errors = reactive({
@@ -241,32 +241,88 @@ export default {
       const value = foodData[field]
       if (value === '') {
         errors[field] = ''
-        return
+        return true
       }
       
       const num = parseFloat(value)
       if (isNaN(num) || num < 0) {
         errors[field] = '请输入大于等于0的数字'
-        return
+        return false
       }
       
       errors[field] = ''
+      return true
+    }
+
+    const validateAll = () => {
+      const fields = ['milk', 'takeaway', 'honey', 'sugar', 'salt', 'rice', 'instantRice']
+      let hasError = false
+      
+      fields.forEach(field => {
+        if (foodData[field] !== '' && !validateInput(field)) {
+          hasError = true
+        }
+      })
+      
+      return !hasError
     }
 
     const nextPage = () => {
-      store.commit('updateFoodData', foodData)
+      if (!validateAll()) {
+        // 找到第一个有错误的输入框并滚动到它
+        const firstError = document.querySelector('.error-message:not(:empty)')
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+      }
+
+      // 计算微塑料数量
+      const microplastics = {
+        milk: parseFloat(foodData.milk || 0) * 0.04,
+        takeaway: parseFloat(foodData.takeaway || 0) * 68000,
+        honey: parseFloat(foodData.honey || 0) * 0.166,
+        sugar: parseFloat(foodData.sugar || 0) * 0.217,
+        salt: parseFloat(foodData.salt || 0) * 0.6155,
+        rice: parseFloat(foodData.rice || 0) * 7.12,
+        instantRice: parseFloat(foodData.instantRice || 0) * 25.6
+      }
+
+      // 保存数据到 store
+      store.commit('updateFoodData', {
+        ...foodData,
+        microplastics
+      })
+      
       router.push('/air')
     }
 
     const previousPage = () => {
-      store.commit('updateFoodData', foodData)
-      router.push('/water-source')
+      // 计算微塑料数量
+      const microplastics = {
+        milk: parseFloat(foodData.milk || 0) * 0.04,
+        takeaway: parseFloat(foodData.takeaway || 0) * 68000,
+        honey: parseFloat(foodData.honey || 0) * 0.166,
+        sugar: parseFloat(foodData.sugar || 0) * 0.217,
+        salt: parseFloat(foodData.salt || 0) * 0.6155,
+        rice: parseFloat(foodData.rice || 0) * 7.12,
+        instantRice: parseFloat(foodData.instantRice || 0) * 25.6
+      }
+
+      // 保存数据到 store
+      store.commit('updateFoodData', {
+        ...foodData,
+        microplastics
+      })
+      
+      router.push('/water')
     }
 
     return {
       foodData,
       errors,
       validateInput,
+      validateAll,
       nextPage,
       previousPage
     }

@@ -9,7 +9,7 @@
         <h3>空气暴露说明</h3>
       </div>
       <div class="card-content">
-        <p class="intro-text">请输入您的体重，我们将根据体重计算您的呼吸量：</p>
+        <p class="intro-text">请输入您的体重和生活区域类型，将以此为依据计算您的每日微塑料摄入量</p>
         <div class="info-list">
           <div class="info-item">
             <div class="item-content">
@@ -21,8 +21,10 @@
           <div class="info-item">
             <div class="item-content">
               <p class="item-title">空气微塑料含量</p>
-              <p class="item-subtitle">（室内外空气平均值）</p>
-              <p class="item-data">每升空气中含有 <strong>393</strong> 个微塑料</p>
+              <p class="item-subtitle">（不同区域含量不同）</p>
+              <p class="item-data">城市区域：每升空气含 <strong>850</strong> 个微塑料</p>
+              <p class="item-data">郊区：每升空气含 <strong>400</strong> 个微塑料</p>
+              <p class="item-data">沿海地区：每升空气含 <strong>550</strong> 个微塑料</p>
             </div>
           </div>
         </div>
@@ -37,16 +39,47 @@
             <input 
               type="text" 
               v-model="airData.weight"
-              placeholder="请输入您的体重"
+              placeholder="请输入体重"
               @input="validateInput('weight')"
             />
             <span class="unit">kg</span>
           </div>
-          <div class="reference">
-            <p>💡 参考：成年男性平均体重约65-75kg，成年女性平均体重约55-65kg</p>
-          </div>
         </div>
         <span class="error-message" v-if="errors.weight">{{ errors.weight }}</span>
+      </div>
+
+      <div class="input-group">
+        <label>生活区域类型</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input 
+              type="radio" 
+              v-model="airData.areaType" 
+              value="city"
+            >
+            <span>城市区域</span>
+          </label>
+          <label class="radio-label">
+            <input 
+              type="radio" 
+              v-model="airData.areaType" 
+              value="suburb"
+            >
+            <span>郊区</span>
+          </label>
+          <label class="radio-label">
+            <input 
+              type="radio" 
+              v-model="airData.areaType" 
+              value="coastal"
+            >
+            <span>沿海地区</span>
+          </label>
+        </div>
+        <div class="reference">
+          <p>💡 参考：城市区域包括商业区、住宅区等；郊区包括城乡结合部、卫星城等；沿海地区包括海滨城市、港口等</p>
+        </div>
+        <span class="error-message" v-if="errors.areaType">{{ errors.areaType }}</span>
       </div>
     </div>
 
@@ -69,30 +102,51 @@ export default {
     const router = useRouter()
     
     const airData = reactive({
-      weight: store.state.airData.weight
+      weight: store.state.airData.weight,
+      areaType: store.state.airData.areaType
     })
 
     const errors = reactive({
-      weight: ''
+      weight: '',
+      areaType: ''
     })
 
     const validateInput = (field) => {
       const value = airData[field]
       if (value === '') {
-        errors[field] = ''
-        return
+        errors[field] = field === 'weight' ? '请输入体重' : '请选择生活区域类型'
+        return false
       }
       
-      const num = parseFloat(value)
-      if (isNaN(num) || num < 0) {
-        errors[field] = '请输入大于等于0的数字'
-        return
+      if (field === 'weight') {
+        const num = parseFloat(value)
+        if (isNaN(num) || num < 0) {
+          errors[field] = '请输入大于等于0的数字'
+          return false
+        }
       }
       
       errors[field] = ''
+      return true
+    }
+
+    const validateAll = () => {
+      const weightValid = validateInput('weight')
+      const areaTypeValid = airData.areaType ? true : (errors.areaType = '请选择生活区域类型', false)
+      
+      return weightValid && areaTypeValid
     }
 
     const nextPage = () => {
+      if (!validateAll()) {
+        // 找到第一个有错误的输入框并滚动到它
+        const firstError = document.querySelector('.error-message:not(:empty)')
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+      }
+
       store.commit('updateAirData', airData)
       router.push('/daily-items')
     }
@@ -106,6 +160,7 @@ export default {
       airData,
       errors,
       validateInput,
+      validateAll,
       nextPage,
       previousPage
     }
@@ -269,5 +324,46 @@ export default {
   .reference p {
     font-size: 0.8em;
   }
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.radio-label:hover {
+  background-color: rgba(129, 216, 208, 0.1);
+}
+
+.radio-label input[type="radio"] {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--tiffany-blue);
+}
+
+.radio-label input[type="radio"]:checked + span {
+  color: var(--tiffany-blue);
+  font-weight: bold;
+}
+
+.radio-label input[type="radio"]:checked {
+  border-color: var(--tiffany-blue);
+}
+
+.radio-label input[type="radio"]:focus {
+  outline: 2px solid var(--tiffany-blue);
+  outline-offset: 2px;
 }
 </style> 

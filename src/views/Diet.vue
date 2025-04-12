@@ -1,7 +1,7 @@
 <template>
   <div class="survey-page">
     <div class="page-header">
-      <h2>第七部分：饮食习惯</h2>
+      <h2>第六部分：饮食习惯</h2>
     </div>
     
     <div class="info-card">
@@ -23,13 +23,6 @@
               <p class="item-title">啤酒</p>
               <p class="item-subtitle">（如瓶装啤酒、罐装啤酒等）</p>
               <p class="item-data">每升含 <strong>21</strong> 个微塑料</p>
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">自来水</p>
-              <p class="item-subtitle">（如饮用水、烹饪用水等）</p>
-              <p class="item-data">每升含 <strong>27.5</strong> 个微塑料</p>
             </div>
           </div>
         </div>
@@ -74,25 +67,6 @@
         </div>
         <span class="error-message" v-if="errors.beer">{{ errors.beer }}</span>
       </div>
-
-      <div class="input-group">
-        <label>自来水（升/月）</label>
-        <div class="input-row">
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              v-model="dietData.tapWater"
-              placeholder="每月饮用自来水量"
-              @input="validateInput('tapWater')"
-            />
-            <span class="unit">L</span>
-          </div>
-          <div class="reference">
-            <p>💡 参考：成年人每天建议饮水量约2-3L，包括饮用水和烹饪用水</p>
-          </div>
-        </div>
-        <span class="error-message" v-if="errors.tapWater">{{ errors.tapWater }}</span>
-      </div>
     </div>
 
     <div class="navigation-buttons">
@@ -106,6 +80,7 @@
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
+import { rates } from '../store'
 
 export default {
   name: 'Diet',
@@ -114,47 +89,95 @@ export default {
     const router = useRouter()
     
     const dietData = reactive({
-      seafood: store.state.dietData.seafood,
-      beer: store.state.dietData.beer,
-      tapWater: store.state.dietData.tapWater
+      seafood: store.state.dietData.seafood || '',
+      beer: store.state.dietData.beer || ''
     })
 
     const errors = reactive({
       seafood: '',
-      beer: '',
-      tapWater: ''
+      beer: ''
     })
 
     const validateInput = (field) => {
       const value = dietData[field]
       if (value === '') {
         errors[field] = ''
-        return
+        return true
       }
       
       const num = parseFloat(value)
       if (isNaN(num) || num < 0) {
         errors[field] = '请输入大于等于0的数字'
-        return
+        return false
       }
       
       errors[field] = ''
+      return true
+    }
+
+    const validateAll = () => {
+      const fields = ['seafood', 'beer']
+      let hasError = false
+      
+      fields.forEach(field => {
+        // 如果字段为空，则跳过验证
+        if (dietData[field] === '') {
+          return
+        }
+        
+        if (!validateInput(field)) {
+          hasError = true
+        }
+      })
+      
+      return !hasError
     }
 
     const analyze = () => {
-      store.commit('updateDietData', dietData)
+      // 检查所有字段，如果为空则设置为0
+      const fields = ['seafood', 'beer']
+      fields.forEach(field => {
+        if (dietData[field] === '') {
+          dietData[field] = '0'
+        }
+      })
+      
+      // 只有当用户输入了内容时才进行验证
+      const hasInput = fields.some(field => dietData[field] !== '0')
+      
+      if (hasInput && !validateAll()) {
+        // 找到第一个有错误的输入框并滚动到它
+        const firstError = document.querySelector('.error-message:not(:empty)')
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+      }
+
+      // 计算微塑料释放量（日均）
+      const processedData = {
+        seafood: parseFloat(dietData.seafood) || 0,
+        beer: parseFloat(dietData.beer) || 0,
+        microplastics: {
+          seafood: (parseFloat(dietData.seafood) || 0) * rates.diet.seafood / 31,  // 转换为日均
+          beer: (parseFloat(dietData.beer) || 0) * rates.diet.beer / 31  // 转换为日均
+        }
+      }
+
+      store.commit('updateDietData', processedData)
       router.push('/result')
     }
 
     const previousPage = () => {
       store.commit('updateDietData', dietData)
-      router.push('/living-area')
+      router.push('/clothing')
     }
 
     return {
       dietData,
       errors,
       validateInput,
+      validateAll,
       analyze,
       previousPage
     }

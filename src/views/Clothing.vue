@@ -37,7 +37,7 @@
     </div>
 
     <div class="input-section">
-      <div class="input-group">
+      <!-- <div class="input-group">
         <label>聚酯纤维衣物（件）</label>
         <div class="input-row">
           <div class="input-wrapper">
@@ -54,22 +54,22 @@
           </div>
         </div>
         <span class="error-message" v-if="errors.polyester">{{ errors.polyester }}</span>
-      </div>
+      </div> -->
 
       <div class="input-group">
-        <label>棉质衣物（件）</label>
+        <label>家中衣物总量（件）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
               type="text" 
               v-model="clothingData.cotton"
-              placeholder="棉质衣物数量"
+              placeholder="请输入家中衣物总量"
               @input="validateInput('cotton')"
             />
             <span class="unit">件</span>
           </div>
           <div class="reference">
-            <p>💡 参考：包括纯棉T恤、衬衫、裤子等天然纤维制成的衣物</p>
+            <p>💡 参考：包括T恤、衬衫、裤子运动服、外套、内衣等天然纤维和纤维制成的衣物</p>
           </div>
         </div>
         <span class="error-message" v-if="errors.cotton">{{ errors.cotton }}</span>
@@ -94,7 +94,7 @@
         <span class="error-message" v-if="errors.carpetArea">{{ errors.carpetArea }}</span>
       </div>
 
-      <div class="input-group">
+      <!-- <div class="input-group">
         <label>地毯使用天数（天/月）</label>
         <div class="input-row">
           <div class="input-wrapper">
@@ -111,7 +111,7 @@
           </div>
         </div>
         <span class="error-message" v-if="errors.carpetDays">{{ errors.carpetDays }}</span>
-      </div>
+      </div> -->
     </div>
 
     <div class="navigation-buttons">
@@ -125,6 +125,7 @@
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
+import { rates } from '../store'
 
 export default {
   name: 'Clothing',
@@ -133,43 +134,89 @@ export default {
     const router = useRouter()
     
     const clothingData = reactive({
-      polyester: store.state.clothingData.polyester,
-      cotton: store.state.clothingData.cotton,
-      carpetArea: store.state.clothingData.carpetArea,
-      carpetDays: store.state.clothingData.carpetDays
+      cotton: store.state.clothingData.cotton || '',
+      carpetArea: store.state.clothingData.carpetArea || ''
     })
 
     const errors = reactive({
-      polyester: '',
       cotton: '',
-      carpetArea: '',
-      carpetDays: ''
+      carpetArea: ''
     })
 
     const validateInput = (field) => {
       const value = clothingData[field]
       if (value === '') {
         errors[field] = ''
-        return
+        return true
       }
       
       const num = parseFloat(value)
       if (isNaN(num) || num < 0) {
         errors[field] = '请输入大于等于0的数字'
-        return
+        return false
       }
       
-      if (field === 'carpetDays' && num > 31) {
-        errors[field] = '每月最多31天'
-        return
+      // 检查是否为整数
+      if (!Number.isInteger(num)) {
+        errors[field] = '请输入整数'
+        return false
       }
       
       errors[field] = ''
+      return true
+    }
+
+    const validateAll = () => {
+      const fields = ['cotton', 'carpetArea']
+      let hasError = false
+      
+      fields.forEach(field => {
+        // 如果字段为空，则跳过验证
+        if (clothingData[field] === '') {
+          return
+        }
+        
+        if (!validateInput(field)) {
+          hasError = true
+        }
+      })
+      
+      return !hasError
     }
 
     const nextPage = () => {
-      store.commit('updateClothingData', clothingData)
-      router.push('/living-area')
+      // 检查所有字段，如果为空则设置为0
+      const fields = ['cotton', 'carpetArea']
+      fields.forEach(field => {
+        if (clothingData[field] === '') {
+          clothingData[field] = '0'
+        }
+      })
+      
+      // 只有当用户输入了内容时才进行验证
+      const hasInput = fields.some(field => clothingData[field] !== '0')
+      
+      if (hasInput && !validateAll()) {
+        // 找到第一个有错误的输入框并滚动到它
+        const firstError = document.querySelector('.error-message:not(:empty)')
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+      }
+
+      // 计算微塑料释放量
+      const processedData = {
+        cotton: parseFloat(clothingData.cotton) || 0,
+        carpetArea: parseFloat(clothingData.carpetArea) || 0,
+        microplastics: {
+          cotton: (parseFloat(clothingData.cotton) || 0) * rates.clothing.cotton,
+          carpetArea: (parseFloat(clothingData.carpetArea) || 0) * rates.clothing.carpetArea
+        }
+      }
+
+      store.commit('updateClothingData', processedData)
+      router.push('/diet')
     }
 
     const previousPage = () => {
@@ -181,6 +228,7 @@ export default {
       clothingData,
       errors,
       validateInput,
+      validateAll,
       nextPage,
       previousPage
     }

@@ -9,27 +9,27 @@
         <h3>水源摄入量说明</h3>
       </div>
       <div class="card-content">
-        <p class="intro-text">请输入日常摄入的三种类型水源的摄入量，单位分别为立方米（m³）或升（L）：</p>
+        <p class="intro-text">请输入日常摄入的三种类型水源的摄入量，单位为毫升（mL）</p>
         <div class="info-list">
           <div class="info-item">
             <div class="item-content">
               <p class="item-title">标准水源水</p>
               <p class="item-subtitle">（如纯净水、净化水）</p>
-              <p class="item-data">每立方米含 <strong>2,200</strong> 个微塑料</p>
+              <p class="item-data">每100毫升含 <strong>0.22</strong> 个微塑料</p>
             </div>
           </div>
           <div class="info-item">
             <div class="item-content">
               <p class="item-title">未经处理的水</p>
               <p class="item-subtitle">（如山泉水、井水）</p>
-              <p class="item-data">每升平均含 <strong>3,307.5</strong> 个微塑料</p>
+              <p class="item-data">每100毫升含 <strong>330</strong> 个微塑料</p>
             </div>
           </div>
           <div class="info-item">
             <div class="item-content">
               <p class="item-title">处理后的水</p>
               <p class="item-subtitle">（如市政自来水）</p>
-              <p class="item-data">每升平均含 <strong>465.5</strong> 个微塑料</p>
+              <p class="item-data">每100毫升含 <strong>46</strong> 个微塑料</p>
             </div>
           </div>
         </div>
@@ -38,7 +38,7 @@
 
     <div class="input-section">
       <div class="input-group">
-        <label>标准水源水（m³）</label>
+        <label>标准水源水（毫升/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -47,17 +47,17 @@
               placeholder="如纯净水、净化水"
               @input="validateInput('purified')"
             />
-            <span class="unit">m³</span>
+            <span class="unit">mL</span>
           </div>
           <div class="reference">
-            <p>💡 参考：1立方米 = 1000升，相当于约500瓶2L装矿泉水</p>
+            <p>💡 参考：普通矿泉水瓶容量为500mL，大瓶装为1.5L</p>
           </div>
         </div>
         <span class="error-message" v-if="errors.purified">{{ errors.purified }}</span>
       </div>
 
       <div class="input-group">
-        <label>未经处理的水（L）</label>
+        <label>未经处理的水（毫升/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -66,17 +66,17 @@
               placeholder="如山泉水、井水"
               @input="validateInput('untreated')"
             />
-            <span class="unit">L</span>
+            <span class="unit">mL</span>
           </div>
           <div class="reference">
-            <p>💡 参考：普通矿泉水瓶容量为500ml-1L，大瓶装为1.5L-2L</p>
+            <p>💡 参考：普通矿泉水瓶容量为500mL，大瓶装为1.5L</p>
           </div>
         </div>
         <span class="error-message" v-if="errors.untreated">{{ errors.untreated }}</span>
       </div>
 
       <div class="input-group">
-        <label>处理后的水（L）</label>
+        <label>处理后的水（毫升/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -85,10 +85,10 @@
               placeholder="如市政自来水"
               @input="validateInput('treated')"
             />
-            <span class="unit">L</span>
+            <span class="unit">mL</span>
           </div>
           <div class="reference">
-            <p>💡 参考：成年人每天建议饮水量为1.5-2L，相当于3-4瓶500ml矿泉水</p>
+            <p>💡 参考：成年人每天建议饮水量为1500-2000mL，相当于3-4瓶500mL矿泉水</p>
           </div>
         </div>
         <span class="error-message" v-if="errors.treated">{{ errors.treated }}</span>
@@ -140,9 +140,36 @@ export default {
       errors[field] = ''
     }
 
+    const validateAll = () => {
+      validateInput('purified')
+      validateInput('untreated')
+      validateInput('treated')
+      return !errors.purified && !errors.untreated && !errors.treated
+    }
+
     const nextPage = () => {
+      if (!validateAll()) {
+        // 找到第一个有错误的输入框并滚动到它
+        const firstError = document.querySelector('.error-message:not(:empty)')
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+      }
+
+      // 计算微塑料数量
+      const microplastics = {
+        purified: parseFloat(waterData.purified || 0) * 0.0022,
+        untreated: parseFloat(waterData.untreated || 0) * 3.3075,
+        treated: parseFloat(waterData.treated || 0) * 0.4655
+      }
+
       // 保存数据到 store
-      store.commit('updateWaterData', waterData)
+      store.commit('updateWaterData', {
+        ...waterData,
+        microplastics
+      })
+      
       // 跳转到下一页
       router.push('/food')
     }
@@ -151,6 +178,7 @@ export default {
       waterData,
       errors,
       validateInput,
+      validateAll,
       nextPage
     }
   }

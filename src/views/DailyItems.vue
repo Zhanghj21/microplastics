@@ -31,26 +31,27 @@
 
     <div class="input-section">
       <div class="input-group">
-        <label>塑料茶包饮用杯数</label>
+        <label>您饮用塑料茶包泡出的茶水量（杯/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
               type="text" 
               v-model="dailyItemsData.teaBags"
-              placeholder="输入杯数"
+              placeholder="请输入您饮用的杯数（1个茶包通常泡1杯）"
               @input="validateInput('teaBags')"
             />
             <span class="unit">杯</span>
           </div>
           <div class="reference">
-            <p>💡 参考：普通茶包容量约200ml-250ml，相当于一杯茶的量</p>
+            <p>💡 参考：1杯≈200~250ml，茶包复用情况：若1个茶包泡多次，请按实际饮用杯数计算
+</p>
           </div>
         </div>
         <span class="error-message" v-if="errors.teaBags">{{ errors.teaBags }}</span>
       </div>
 
       <div class="input-group">
-        <label>塑料餐具使用次数</label>
+        <label>塑料餐具使用次数（次/日）</label>
         <div class="input-row">
           <div class="input-wrapper">
             <input 
@@ -110,10 +111,30 @@ export default {
         return
       }
       
+      if (!Number.isInteger(num)) {
+        errors[field] = '请输入整数'
+        return
+      }
+      
       errors[field] = ''
     }
 
+    const validateAll = () => {
+      validateInput('teaBags')
+      validateInput('plasticUtensils')
+      return !errors.teaBags && !errors.plasticUtensils
+    }
+
     const nextPage = () => {
+      if (!validateAll()) {
+        // 找到第一个有错误的输入框并滚动到它
+        const firstError = document.querySelector('.error-message:not(:empty)')
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+      }
+      
       store.commit('updateDailyItemsData', dailyItemsData)
       router.push('/clothing')
     }
@@ -127,6 +148,7 @@ export default {
       dailyItemsData,
       errors,
       validateInput,
+      validateAll,
       nextPage,
       previousPage
     }

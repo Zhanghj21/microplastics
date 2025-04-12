@@ -19,7 +19,7 @@
     <!-- 导航进度条 -->
     <div class="progress-bar">
       <div class="progress" :style="{ width: progressWidth + '%' }"></div>
-      <div class="page-indicator">{{ currentStep }}/7</div>
+      <div class="page-indicator">{{ currentStep }}/6</div>
     </div>
 
     <!-- 主要内容区域 -->
@@ -40,15 +40,15 @@
         </div>
         <div class="footer-section">
           <h4>联系方式</h4>
-          <p>📧 Email: contact@microplastics.com</p>
+          <p>📧 Email: plasticountai@163.com</p>
           <p>📱 Tel: +86 123-4567-8900</p>
         </div>
         <div class="footer-section">
           <h4>友情链接</h4>
           <div class="footer-links">
-            <a href="#" target="_blank">环境保护署</a>
-            <a href="#" target="_blank">世界卫生组织</a>
-            <a href="#" target="_blank">海洋保护协会</a>
+            <a href="https://www.epa.gov/" target="_blank">环境保护署（EPA，美国）</a>
+            <a href="https://www.who.int" target="_blank">世界卫生组织（WHO）</a>
+            <a href="https://oceana.org" target="_blank">海洋保护协会（Oceana）</a>
           </div>
         </div>
       </div>
@@ -77,9 +77,8 @@ export default {
       'air': 3,
       'dailyitems': 4,
       'clothing': 5,
-      'livingarea': 6,
-      'diet': 7,
-      'result': 8
+      'diet': 6,
+      'result': 0
     }
 
     const currentStep = computed(() => {
@@ -88,7 +87,12 @@ export default {
     })
 
     const progressWidth = computed(() => {
-      return currentStep.value > 0 ? (currentStep.value / 7) * 100 : 0
+      return currentStep.value > 0 ? (currentStep.value / 6) * 100 : 0
+    })
+
+    const showProgress = computed(() => {
+      const step = routeSteps[route.name?.toLowerCase()] || 0
+      return step > 0 && step <= 6
     })
 
     const scrollToTop = () => {
@@ -106,6 +110,7 @@ export default {
     return {
       currentStep,
       progressWidth,
+      showProgress,
       mainContent,
       scrollToTop,
       selectedLanguage,
@@ -292,7 +297,7 @@ body {
   height: 4px;
   background: rgba(129, 216, 208, 0.2);
   z-index: 1000;
-  display: v-bind("currentStep > 0 && currentStep < 8 ? 'block' : 'none'");
+  display: v-bind("showProgress ? 'block' : 'none'");
 }
 
 .progress {
@@ -310,7 +315,7 @@ body {
   padding: 6px 16px;
   border-radius: 15px;
   font-size: var(--font-size-lg);
-  display: v-bind("currentStep > 0 && currentStep < 8 ? 'block' : 'none'");
+  display: v-bind("showProgress ? 'block' : 'none'");
 }
 
 /* 页面过渡动画 */
