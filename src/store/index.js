@@ -161,31 +161,31 @@ export default createStore({
 // 辅助计算函数
 export const rates = {
   water: {
-    purified: 0.22,    // 每100毫升含0.22个微塑料
-    untreated: 330,    // 每100毫升含330个微塑料
-    treated: 46        // 每100毫升含46个微塑料
+    purified: 3,    // 每100毫升含0.22个微塑料
+    untreated: 8,    // 每100毫升含330个微塑料
+    treated: 5      // 每100毫升含46个微塑料
   },
   food: {
-    milk: 40,          // 每升含40个微塑料
-    takeaway: 68000,   // 每升含68000个微塑料
-    honey: 166,        // 每千克含166个微塑料
-    sugar: 217,        // 每千克含217个微塑料
-    salt: 615.5,       // 每千克含615.5个微塑料
-    rice: 712,         // 每100克含712个微塑料
-    instantRice: 2560  // 每100克含2560个微塑料
+    milk: 12,          // 每升含40个微塑料
+    takeaway: 14,   // 每升含68000个微塑料
+    honey: 9.66,        // 每千克含166个微塑料
+    sugar: 13.17,        // 每千克含217个微塑料
+    salt: 12.15,       // 每千克含615.5个微塑料
+    rice: 14.2,         // 每100克含712个微塑料
+    instantRice: 25.6  // 每100克含2560个微塑料
   },
   air: {
-    city: 850,         // 城市区域每升含850个微塑料
-    suburb: 400,       // 郊区每升含400个微塑料
-    coastal: 550       // 沿海地区每升含550个微塑料
+    city: 0.08,         // 城市区域每升含850个微塑料
+    suburb: 0.04,       // 郊区每升含400个微塑料
+    coastal: 0.02       // 沿海地区每升含550个微塑料
   },
   dailyItems: {
-    teaBags: 2000,
-    plasticUtensils: 125
+    teaBags: 2,
+    plasticUtensils: 1
   },
   clothing: {
-    cotton: 400,       // 每件棉质衣物每天释放400个微塑料
-    carpetArea: 12.5   // 每平方米地毯每天释放12.5个微塑料
+    cotton: 4,       // 每件棉质衣物每天释放400个微塑料
+    carpetArea: 1.2   // 每平方米地毯每天释放12.5个微塑料
   },
   diet: {
     seafood: 0.8,      // 每克海鲜含0.8个微塑料
@@ -246,8 +246,8 @@ function calculateDietPlastics(dietData) {
 
 function calculateDailyItemsPlastics(dailyItemsData) {
   return Math.round(
-    (parseFloat(dailyItemsData.teaBags || 0) * 2000) +  // 每杯茶包释放2000个微塑料
-    (parseFloat(dailyItemsData.plasticUtensils || 0) * 125)  // 每次塑料餐具释放125个微塑料
+    (parseFloat(dailyItemsData.teaBags || 0) * 20) +  // 每杯茶包释放2000个微塑料
+    (parseFloat(dailyItemsData.plasticUtensils || 0) * 12)  // 每次塑料餐具释放125个微塑料
   )
 }
 

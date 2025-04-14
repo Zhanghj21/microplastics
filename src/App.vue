@@ -155,13 +155,14 @@ body {
 .banner {
   background: linear-gradient(135deg, var(--tiffany-dark) 0%, var(--tiffany-blue) 100%);
   color: white;
-  padding: 20px 0;
+  padding: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 100;
+  height: 80px; /* 设置固定高度 */
 }
 
 .banner-content {
@@ -169,9 +170,10 @@ body {
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: relative;
+  height: 100%; /* 继承父元素高度 */
 }
 
 .logo {
@@ -180,7 +182,8 @@ body {
   gap: 10px;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .icon {
@@ -198,7 +201,14 @@ body {
 }
 
 .language-selector {
-  margin-left: auto;
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .language-selector select {
@@ -221,7 +231,7 @@ body {
 .main-content {
   flex: 1 0 auto;
   padding: 20px;
-  margin-top: 100px; /* 减小顶部边距，因为banner高度减小了 */
+  margin-top: 100px; /* 根据banner高度调整 */
   margin-bottom: 40px;
   min-height: auto;
   overflow-y: auto;
@@ -291,7 +301,7 @@ body {
 /* 进度条样式 */
 .progress-bar {
   position: fixed;
-  top: 85px; /* 向下移动进度条 */
+  top: 80px; /* 根据banner高度调整 */
   left: 0;
   width: 100%;
   height: 4px;
@@ -308,7 +318,7 @@ body {
 
 .page-indicator {
   position: fixed;
-  top: 95px; /* 相应调整页码指示器的位置 */
+  top: 90px; /* 根据banner高度调整 */
   right: 20px;
   background: var(--tiffany-dark);
   color: white;
@@ -372,7 +382,7 @@ p {
   }
 
   .banner {
-    padding: 15px 0;
+    height: 60px; /* 移动端更小的高度 */
   }
 
   .logo h1 {
@@ -385,9 +395,7 @@ p {
   }
 
   .main-content {
-    padding: 10px;
-    margin-top: 80px; /* 减小移动端的顶部边距 */
-    margin-bottom: 20px;
+    margin-top: 80px; /* 移动端更小的margin */
   }
 
   .footer-content {
@@ -404,14 +412,12 @@ p {
     align-items: center;
   }
 
-  .page-indicator {
-    font-size: var(--font-size-base);
-    padding: 2px 8px;
-    top: 75px; /* 调整移动端进度条位置 */
+  .progress-bar {
+    top: 60px; /* 移动端进度条位置 */
   }
 
-  .progress-bar {
-    top: 65px; /* 调整移动端进度条位置 */
+  .page-indicator {
+    top: 70px; /* 移动端页码指示器位置 */
   }
 }
 </style> 

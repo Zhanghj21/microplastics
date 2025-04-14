@@ -30,6 +30,12 @@
         <h3>总微塑料摄入量</h3>
         <p class="total-amount">{{ totalPlastics.total.toLocaleString() }} 个</p>
       </div>
+      <div class="global-comparison" :class="comparisonClass">
+          <div class="comparison-content">
+            <p class="comparison-text">{{ comparisonText }}</p>
+            <p class="comparison-detail">全球人均每日摄入量：286个</p>
+          </div>
+        </div>
 
       <div class="analysis-section">
         <h3>摄入分析</h3>
@@ -96,6 +102,21 @@ export default {
     }
 
     const totalPlastics = computed(() => store.getters.totalPlastics)
+
+    const comparisonClass = computed(() => {
+      const total = totalPlastics.value.total
+      const percentage = ((total - 286) / 286) * 100
+      if (total <= 286) return 'below-average'
+      if (percentage <= 20) return 'slightly-above'
+      return 'significantly-above'
+    })
+
+    const comparisonText = computed(() => {
+      const total = totalPlastics.value.total
+      const percentage = (((total - 286) / 286) * 100).toFixed(2)
+      if (total <= 286) return '您的微塑料摄入量低于全球平均水平'
+      return `您的微塑料摄入量超过全球平均水平${percentage}%`
+    })
 
     const categoryNames = {
       water: '环境水源',
@@ -382,7 +403,9 @@ export default {
       formatNumber,
       formatPercent,
       getAIAnalysis,
-      getHealthTips
+      getHealthTips,
+      comparisonClass,
+      comparisonText
     }
   }
 }
@@ -1067,6 +1090,73 @@ export default {
   
   .total-intake {
     font-size: 20px;
+  }
+}
+
+.global-comparison {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.global-comparison.below-average {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+  border: 2px solid rgba(76, 175, 80, 0.3);
+  color: #2E7D32;
+}
+
+.global-comparison.slightly-above {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+  border: 2px solid rgba(255, 193, 7, 0.3);
+  color: #FF8F00;
+}
+
+.global-comparison.significantly-above {
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1), rgba(244, 67, 54, 0.05));
+  border: 2px solid rgba(244, 67, 54, 0.3);
+  color: #D32F2F;
+}
+
+.comparison-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.comparison-content::before {
+  display: none;
+}
+
+.comparison-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  padding-top: 8px;
+}
+
+.comparison-detail {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .global-comparison {
+    margin: 15px 0;
+    padding: 15px;
+  }
+
+  .comparison-text {
+    font-size: 1.1rem;
+  }
+
+  .comparison-detail {
+    font-size: 0.9rem;
   }
 }
 </style> 
