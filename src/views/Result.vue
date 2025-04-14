@@ -1,63 +1,62 @@
 <template>
   <div class="survey-page">
     <div class="page-header">
-      <h2>微塑料摄入分析报告</h2>
+      <h2>{{ $t('result.title') }}</h2>
     </div>
 
     <div class="result-content">
       <div class="result-section">
-        <h3>总体评估</h3>
-        <p class="result-summary">🎉 根据分析，以下是您的微塑料摄入情况：</p>
+        <h3>{{ $t('result.overall.title') }}</h3>
+        <p class="result-summary">{{ $t('result.overall.summary') }}</p>
       </div>
 
-      <!-- 添加图表标题 -->
       <div class="chart-title">
-        <h3>微塑料摄入来源分布</h3>
-        <p class="chart-subtitle">各来源占比分析</p>
+        <h3>{{ $t('result.chart.title') }}</h3>
+        <p class="chart-subtitle">{{ $t('result.chart.subtitle') }}</p>
       </div>
 
-      <!-- ECharts图表容器 -->
       <div id="microplasticsChart" class="chart-container"></div>
 
       <div class="category-results">
         <div class="category-item" v-for="(amount, category) in totalPlastics" :key="category">
-          <h4>{{ getCategoryName(category) }}</h4>
-          <p class="amount">{{ amount.toLocaleString() }} 个</p>
+          <h4>{{ $t(`result.categories.${category}`) }}</h4>
+          <p class="amount">{{ amount.toLocaleString() }} {{ $t('result.total.unit') }}</p>
         </div>
       </div>
 
       <div class="total-result">
-        <h3>总微塑料摄入量</h3>
-        <p class="total-amount">{{ totalPlastics.total.toLocaleString() }} 个</p>
+        <h3>{{ $t('result.total.title') }}</h3>
+        <p class="total-amount">{{ totalPlastics.total.toLocaleString() }} {{ $t('result.total.unit') }}</p>
       </div>
+
       <div class="global-comparison" :class="comparisonClass">
-          <div class="comparison-content">
-            <p class="comparison-text">{{ comparisonText }}</p>
-            <p class="comparison-detail">全球人均每日摄入量：286个</p>
-          </div>
+        <div class="comparison-content">
+          <p class="comparison-text">{{ comparisonText }}</p>
+          <p class="comparison-detail">{{ $t('result.comparison.average') }}</p>
         </div>
+      </div>
 
       <div class="analysis-section">
-        <h3>摄入分析</h3>
+        <h3>{{ $t('result.analysis.title') }}</h3>
         <div v-html="analysisText"></div>
-        <div v-if="isAnalyzing" class="loading">AI正在分析中...</div>
+        <div v-if="isAnalyzing" class="loading">{{ $t('result.analysis.loading') }}</div>
       </div>
 
       <div class="result-tips">
-        <h3>健康建议</h3>
+        <h3>{{ $t('result.tips.title') }}</h3>
         <div v-html="healthTips"></div>
       </div>
 
       <div class="ai-analysis-dialog">
-        <h3>AI分析助手</h3>
+        <h3>{{ $t('result.ai.title') }}</h3>
         <div class="input-group">
           <input 
             v-model="userInput" 
-            placeholder="输入你摄入的微塑料数据..." 
+            :placeholder="$t('result.ai.placeholder')"
             @keyup.enter="handleSubmit"
           />
           <button @click="handleSubmit" :disabled="isLoading">
-            {{ isLoading ? '分析中...' : '提交' }}
+            {{ isLoading ? $t('result.ai.loading') : $t('result.ai.submit') }}
           </button>
         </div>
         <div class="response" :class="{ 'loading': isLoading }" v-html="responseText">
@@ -66,8 +65,8 @@
     </div>
 
     <div class="navigation-buttons">
-      <button class="prev-button" @click="previousPage">返回修改</button>
-      <button class="restart-button" @click="restart">重新开始</button>
+      <button class="prev-button" @click="previousPage">{{ $t('result.navigation.previous') }}</button>
+      <button class="restart-button" @click="restart">{{ $t('result.navigation.restart') }}</button>
     </div>
   </div>
 </template>
@@ -78,12 +77,14 @@ import { useRouter } from 'vue-router'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import * as echarts from 'echarts'
 import { marked } from 'marked'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Result',
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { t, locale } = useI18n()
     let chart = null
     const isAnalyzing = ref(false)
     const isLoadingTips = ref(false)
@@ -114,25 +115,17 @@ export default {
     const comparisonText = computed(() => {
       const total = totalPlastics.value.total
       const percentage = (((total - 286) / 286) * 100).toFixed(2)
-      if (total <= 286) return '您的微塑料摄入量低于全球平均水平'
-      return `您的微塑料摄入量超过全球平均水平${percentage}%`
+      if (total <= 286) return t('result.comparison.below')
+      return t('result.comparison.above', [percentage])
     })
 
-    const categoryNames = {
-      water: '环境水源',
-      food: '食品摄入',
-      air: '空气暴露',
-      dailyItems: '日用品释放',
-      clothing: '衣物与纺织品',
-      diet: '饮食习惯',
-      total: '总计'
+    const analysisText = ref(t('result.analysis.loading'))
+
+    const healthTips = ref(t('result.tips.loading'))
+
+    const getCategoryName = (category) => {
+      return t(`result.categories.${category}`)
     }
-
-    const getCategoryName = (category) => categoryNames[category] || category
-
-    const analysisText = ref('正在生成分析报告...')
-
-    const healthTips = ref('正在生成健康建议...')
 
     const initChart = () => {
       const chartDom = document.getElementById('microplasticsChart')
@@ -141,12 +134,12 @@ export default {
       chart = echarts.init(chartDom)
       
       const sources = [
-        { name: '环境水源', value: totalPlastics.value.water },
-        { name: '食品摄入', value: totalPlastics.value.food },
-        { name: '空气暴露', value: totalPlastics.value.air },
-        { name: '日用品释放', value: totalPlastics.value.dailyItems },
-        { name: '衣物与纺织品', value: totalPlastics.value.clothing },
-        { name: '饮食习惯', value: totalPlastics.value.diet }
+        { name: t('result.categories.water'), value: totalPlastics.value.water },
+        { name: t('result.categories.food'), value: totalPlastics.value.food },
+        { name: t('result.categories.air'), value: totalPlastics.value.air },
+        { name: t('result.categories.dailyItems'), value: totalPlastics.value.dailyItems },
+        { name: t('result.categories.clothing'), value: totalPlastics.value.clothing },
+        { name: t('result.categories.diet'), value: totalPlastics.value.diet }
       ].sort((a, b) => b.value - a.value)
 
       const top3 = sources.slice(0, 3)
@@ -159,9 +152,9 @@ export default {
         tooltip: {
           trigger: 'item',
           formatter: function(params) {
-            if (params.name === '其他来源') {
+            if (params.name === t('result.chart.others')) {
               const othersList = others.map(item => `${item.name}: ${item.value}`).join('<br/>')
-              return `其他来源 (${othersSum})<br/>${othersList}`
+              return `${t('result.chart.others')} (${othersSum})<br/>${othersList}`
             }
             return `${params.name}: ${params.value} (${params.percent}%)`
           }
@@ -178,7 +171,7 @@ export default {
         },
         series: [
           {
-            name: '微塑料摄入来源',
+            name: t('result.chart.seriesName'),
             type: 'pie',
             radius: isMobile ? ['20%', '40%'] : ['15%', '45%'],
             center: isMobile ? ['50%', '45%'] : ['40%', '50%'],
@@ -215,7 +208,7 @@ export default {
                 }
               })),
               { 
-                name: '其他来源', 
+                name: t('result.chart.others'), 
                 value: othersSum,
                 itemStyle: {
                   color: '#D3F3F1'
@@ -229,20 +222,62 @@ export default {
       chart.setOption(option)
     }
 
+    const requestQueue = ref([])
+    const isProcessing = ref(false)
+
+    const addToQueue = (prompt) => {
+      return new Promise((resolve, reject) => {
+        requestQueue.value.push({ prompt, resolve, reject })
+        if (!isProcessing.value) {
+          processQueue()
+        }
+      })
+    }
+
+    const processQueue = async () => {
+      if (isProcessing.value || requestQueue.value.length === 0) return
+
+      isProcessing.value = true
+      const request = requestQueue.value[0]
+
+      try {
+        const result = await callSiliconFlowAI(request.prompt)
+        request.resolve(result)
+      } catch (err) {
+        console.error('处理队列请求失败:', err)
+        request.reject(err)
+      } finally {
+        requestQueue.value.shift()
+        isProcessing.value = false
+        
+        // 如果队列中还有请求，等待3秒后处理下一个
+        if (requestQueue.value.length > 0) {
+          setTimeout(processQueue, 3000)
+        }
+      }
+    }
+
     const callSiliconFlowAI = async (userMessage) => {
       const API_KEY = 'sk-ncewliubkpafiwcejozjqvycdcbacwrjvlqkvjfdxdazwdqy'
       const endpoint = 'https://api.siliconflow.cn/v1/chat/completions'
 
+      // 根据当前语言设置不同的系统提示
+      const systemPrompt = locale.value === 'zh' 
+        ? `${t('result.ai.systemPrompt')}\n\n请确保回复内容完整且简洁，包含所有要点，并且字数不超过100字。\n请注意：\n1. 回复必须是完整的，不能中途截断\n2. 需要包含所有关键信息\n3. 语言要简洁明了\n4. 确保两个分析（摄入分析和健康建议）都能得到完整的回复`
+        : `${t('result.ai.systemPrompt')}\n\nPlease ensure your response is complete and concise, covering all key points, and does not exceed 150 words.\nPlease note:\n1. The response must be complete, not truncated\n2. All key information must be included\n3. Language should be clear and concise\n4. Ensure both analyses (Intake Analysis and Health Tips) receive complete responses\n5. Please respond in English only, do not include any Chinese characters`
+
       const payload = {
         model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
         messages: [
-          { role: "system", content: "你是一个专业的微塑料健康评估助手。" },
+          { role: "system", content: systemPrompt },
           { role: "user", content: userMessage }
         ],
         stream: false,
-        max_tokens: 512,
+        max_tokens: 1024,
         temperature: 0.7,
-        top_p: 0.7
+        top_p: 0.7,
+        presence_penalty: 0.6,
+        frequency_penalty: 0.6
       }
 
       const res = await fetch(endpoint, {
@@ -254,44 +289,52 @@ export default {
         body: JSON.stringify(payload)
       })
 
-      if (!res.ok) throw new Error(`请求失败：${res.status}`)
+      if (!res.ok) throw new Error(t('result.ai.error', [res.status]))
 
       const result = await res.json()
-      return result.choices[0].message.content
+      let content = result.choices[0].message.content
+
+      // 检查内容是否完整
+      if (locale.value === 'zh') {
+        if (!content.endsWith('。') && !content.endsWith('!') && !content.endsWith('?') && !content.endsWith('！') && !content.endsWith('？')) {
+          content += '。' // 如果内容没有以标点符号结束，添加句号
+        }
+      } else {
+        if (!content.endsWith('.') && !content.endsWith('!') && !content.endsWith('?')) {
+          content += '.' // 如果内容没有以标点符号结束，添加句号
+        }
+      }
+
+      return content
     }
 
     const getAIAnalysis = async () => {
       try {
         isAnalyzing.value = true
         const sources = [
-          { name: '环境水源', value: totalPlastics.value.water },
-          { name: '食品摄入', value: totalPlastics.value.food },
-          { name: '空气暴露', value: totalPlastics.value.air },
-          { name: '日用品释放', value: totalPlastics.value.dailyItems },
-          { name: '衣物与纺织品', value: totalPlastics.value.clothing },
-          { name: '饮食习惯', value: totalPlastics.value.diet }
+          { name: t('result.categories.water'), value: totalPlastics.value.water },
+          { name: t('result.categories.food'), value: totalPlastics.value.food },
+          { name: t('result.categories.air'), value: totalPlastics.value.air },
+          { name: t('result.categories.dailyItems'), value: totalPlastics.value.dailyItems },
+          { name: t('result.categories.clothing'), value: totalPlastics.value.clothing },
+          { name: t('result.categories.diet'), value: totalPlastics.value.diet }
         ].sort((a, b) => b.value - a.value)
 
         const top3 = sources.slice(0, 3)
         const total = totalPlastics.value.total
 
-        const prompt = `请根据以下数据进行分析（字数限制在150字以内）：
-        总微塑料摄入量：${formatNumber(total)}个/天
-        主要来源：
-        ${top3.map((s, index) => 
-          `${index + 1}. ${s.name}: ${formatNumber(s.value)}个/天 (${formatPercent(s.value, total)}%)`
-        ).join('\n')}
+        const prompt = t('result.analysis.prompt', {
+          total: formatNumber(total),
+          sources: top3.map((s, index) => 
+            `${index + 1}. ${s.name}: ${formatNumber(s.value)}${t('result.total.unit')}/天 (${formatPercent(s.value, total)}%)`
+          ).join('\n')
+        })
 
-        请重点分析：
-        1. 主要摄入来源及其危害程度
-        2. 潜在的健康风险评估
-        3. 与普通人群的对比分析`
-
-        const reply = await retryAnalysis(prompt)
+        const reply = await addToQueue(prompt)
         analysisText.value = marked(reply)
       } catch (err) {
-        console.error('获取AI分析失败:', err)
-        analysisText.value = `<div class="error-message">获取分析结果失败，请点击重试按钮。</div>`
+        console.error(t('result.analysis.error'), err)
+        analysisText.value = `<div class="error-message">${t('result.analysis.errorMessage')}</div>`
       } finally {
         isAnalyzing.value = false
       }
@@ -308,39 +351,20 @@ export default {
           }))
         const total = totalPlastics.value.total
 
-        const prompt = `请根据以下数据给出具体可行的改善建议（字数限制在150字以内）：
-        总微塑料摄入量：${formatNumber(total)}个/天
-        各来源占比：
-        ${sources.map(s => 
-          `${s.name}: ${formatPercent(s.value, total)}%`
-        ).join('\n')}
+        const prompt = t('result.tips.prompt', {
+          total: formatNumber(total),
+          sources: sources.map(s => 
+            `${s.name}: ${formatPercent(s.value, total)}%`
+          ).join('\n')
+        })
 
-        请给出：
-        1. 针对TOP3来源的具体减少方案
-        2. 日常生活中的可执行措施
-        3. 长期改善计划建议`
-
-        const reply = await retryAnalysis(prompt)
+        const reply = await addToQueue(prompt)
         healthTips.value = marked(reply)
       } catch (err) {
-        console.error('获取健康建议失败:', err)
-        healthTips.value = `<div class="error-message">获取健康建议失败，请点击重试按钮。</div>`
+        console.error(t('result.tips.error'), err)
+        healthTips.value = `<div class="error-message">${t('result.tips.errorMessage')}</div>`
       } finally {
         isLoadingTips.value = false
-      }
-    }
-
-    const retryAnalysis = async (prompt) => {
-      while (retryCount.value < maxRetries) {
-        try {
-          return await callSiliconFlowAI(prompt)
-        } catch (err) {
-          retryCount.value++
-          if (retryCount.value === maxRetries) {
-            throw new Error(`分析失败（已重试${maxRetries}次）：${err.message}`)
-          }
-          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount.value))
-        }
       }
     }
 
@@ -365,23 +389,21 @@ export default {
     }
 
     const userInput = ref('')
-    const responseText = ref('等待回复...')
+    const responseText = ref(t('result.ai.waiting'))
     const isLoading = ref(false)
 
     const handleSubmit = async () => {
       if (!userInput.value.trim()) return
       
       isLoading.value = true
-      responseText.value = 'AI 正在分析...'
+      responseText.value = t('result.ai.loading')
 
       try {
-        const prompt = `请根据以下问题给出分析（字数限制在100字以内）：
-        ${userInput.value}`
-
+        const prompt = t('result.ai.userPrompt', [userInput.value])
         const reply = await callSiliconFlowAI(prompt)
         responseText.value = marked(reply)
       } catch (err) {
-        responseText.value = `错误：${err.message}`
+        responseText.value = t('result.ai.error', [err.message])
       } finally {
         isLoading.value = false
       }

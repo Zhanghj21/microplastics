@@ -1,93 +1,101 @@
 <template>
   <div class="introduction-page">
-    <div class="intro-card">
-      <h1>微塑料健康评估系统</h1>
-      <div class="intro-content">
-        <div class="section">
-          <h2>评估流程说明</h2>
-          <p>本评估系统共包含6个部分，每个部分都包含微塑料说明和表格填写两个环节。</p>
-          <div class="process-list">
-            <div v-for="(item, index) in processItems" :key="index" class="process-item">
-              <div class="process-header" @click="toggleItem(index)">
-                <span class="number">{{ index + 1 }}</span>
-                <span class="text">{{ item.title }}</span>
+    <div class="header">
+      <h1>{{ $t('introduction.title') }}</h1>
+    </div>
+    
+    <div class="content">
+      <div class="process-section">
+        <h2>{{ $t('introduction.process.title') }}</h2>
+        <p>{{ $t('introduction.process.description') }}</p>
+        
+        <div class="process-items">
+          <div v-for="(item, index) in processItems" :key="index" class="process-item">
+            <div class="item-number">{{ index + 1 }}</div>
+            <div class="item-content">
+              <div class="item-header" @click="toggleItem(index)">
+                <h3>{{ item.title }}</h3>
               </div>
-              <div class="process-details" :class="{ 'details-open': item.isOpen }">
+              <div class="item-description" :class="{ 'expanded': isExpanded[index] }">
                 <p>{{ item.description }}</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="section">
-          <h2>评估结果</h2>
-          <p>完成所有评估后，系统将生成一份详细的微塑料暴露评估报告，包括：</p>
-          <ul class="result-list">
-            <li>各来源微塑料暴露量分析</li>
-            <li>总体暴露风险评估</li>
-            <li>个性化防护建议</li>
-          </ul>
-        </div>
       </div>
-      <div class="start-button">
-        <button @click="startAssessment">开始评估</button>
+      
+      <div class="result-section">
+        <h2>{{ $t('introduction.result.title') }}</h2>
+        <p>{{ $t('introduction.result.description') }}</p>
+        
+        <ul class="result-items">
+          <li v-for="(item, index) in resultItems" :key="index">
+            <span class="checkmark">✓</span>
+            <span class="item-text">{{ item }}</span>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="start-section">
+        <button @click="startAssessment" class="start-button">
+          {{ $t('introduction.startButton') }}
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-
 export default {
   name: 'Introduction',
-  setup() {
-    const router = useRouter()
-    const processItems = ref([
-      {
-        title: '环境水源',
-        description: '评估日常饮用水、生活用水等水源中的微塑料暴露情况。',
-        isOpen: false
-      },
-      {
-        title: '食品摄入',
-        description: '评估日常饮食中可能摄入的微塑料情况。',
-        isOpen: false
-      },
-      {
-        title: '空气暴露',
-        description: '评估空气中微塑料颗粒的暴露情况。',
-        isOpen: false
-      },
-      {
-        title: '日用品释放',
-        description: '评估日常用品使用过程中释放的微塑料情况。',
-        isOpen: false
-      },
-      {
-        title: '衣物与纺织品',
-        description: '评估衣物和纺织品使用过程中产生的微塑料情况。',
-        isOpen: false
-      },
-      {
-        title: '饮食习惯',
-        description: '评估饮食习惯对微塑料摄入的影响。',
-        isOpen: false
-      }
-    ])
-
-    const toggleItem = (index) => {
-      processItems.value[index].isOpen = !processItems.value[index].isOpen
-    }
-
-    const startAssessment = () => {
-      router.push('/water')
-    }
-
+  data() {
     return {
-      processItems,
-      toggleItem,
-      startAssessment
+      isExpanded: Array(6).fill(false)
+    }
+  },
+  computed: {
+    processItems() {
+      return [
+        {
+          title: this.$t('introduction.process.items[0].title'),
+          description: this.$t('introduction.process.items[0].description')
+        },
+        {
+          title: this.$t('introduction.process.items[1].title'),
+          description: this.$t('introduction.process.items[1].description')
+        },
+        {
+          title: this.$t('introduction.process.items[2].title'),
+          description: this.$t('introduction.process.items[2].description')
+        },
+        {
+          title: this.$t('introduction.process.items[3].title'),
+          description: this.$t('introduction.process.items[3].description')
+        },
+        {
+          title: this.$t('introduction.process.items[4].title'),
+          description: this.$t('introduction.process.items[4].description')
+        },
+        {
+          title: this.$t('introduction.process.items[5].title'),
+          description: this.$t('introduction.process.items[5].description')
+        }
+      ]
+    },
+    resultItems() {
+      return [
+        this.$t('introduction.result.items[0]'),
+        this.$t('introduction.result.items[1]'),
+        this.$t('introduction.result.items[2]')
+      ]
+    }
+  },
+  methods: {
+    startAssessment() {
+      this.$router.push('/water-source')
+    },
+    toggleItem(index) {
+      this.isExpanded[index] = !this.isExpanded[index]
     }
   }
 }
@@ -95,84 +103,68 @@ export default {
 
 <style scoped>
 .introduction-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  max-width: 800px;
+  margin: 0 auto;
   padding: 20px;
 }
 
-.intro-card {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 800px;
-  width: 100%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
+.header {
   text-align: center;
-  color: var(--tiffany-dark);
-  margin-bottom: 30px;
-  font-size: 2.2rem;
-}
-
-.intro-content {
   margin-bottom: 40px;
 }
 
-.section {
-  margin-bottom: 30px;
+.header h1 {
+  font-size: 2.5rem;
+  color: #333;
 }
 
-.section:last-child {
-  margin-bottom: 0;
+.content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.process-section,
+.result-section {
+  margin-bottom: 40px;
 }
 
 h2 {
-  color: var(--tiffany-blue);
-  margin-bottom: 15px;
-  font-size: 1.5rem;
-}
-
-p {
-  color: var(--text-primary);
-  line-height: 1.6;
+  font-size: 1.8rem;
+  color: #444;
   margin-bottom: 20px;
 }
 
-.process-list {
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.process-items {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
+  gap: 20px;
 }
 
 .process-item {
-  background: rgba(129, 216, 208, 0.1);
-  border-radius: 10px;
-  margin-bottom: 10px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-}
-
-.process-header {
   display: flex;
-  align-items: center;
-  padding: 15px;
-  gap: 15px;
+  align-items: flex-start;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid #e0e0e0;
 }
 
-.process-header:hover {
-  background: rgba(129, 216, 208, 0.2);
+.process-item:hover {
+  background: #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.number {
-  background: var(--tiffany-blue);
+.item-number {
+  background: #81D8D0;
   color: white;
   width: 30px;
   height: 30px;
@@ -180,130 +172,148 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  margin-right: 15px;
   flex-shrink: 0;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 3px;
 }
 
-.text {
-  color: var(--text-primary);
-  font-weight: 500;
-  flex-grow: 1;
+.item-content {
+  flex: 1;
+  min-width: 0;
 }
 
-.process-details {
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px 0;
+  min-height: 36px;
+}
+
+.item-header h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-header:hover h3 {
+  color: #81D8D0;
+}
+
+.item-description {
   max-height: 0;
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.5);
-  padding: 0 15px;
+  opacity: 0;
+  transform: translateY(-10px);
+  margin-top: 0;
 }
 
-.details-open {
-  max-height: 200px;
-  padding: 15px;
+.item-description.expanded {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.process-details p {
-  margin: 0;
-  color: var(--text-primary);
-  line-height: 1.6;
+.item-description p {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-left: 5px;
+  border-left: 3px solid #81D8D0;
+  padding-left: 15px;
 }
 
-.result-list {
-  list-style: none;
+.result-items {
+  list-style-type: none;
   padding: 0;
-  margin: 0;
 }
 
-.result-list li {
-  padding: 10px 0;
-  color: var(--text-primary);
-  position: relative;
-  padding-left: 25px;
+.result-items li {
+  background: #f8f9fa;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #444;
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
 }
 
-.result-list li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: var(--tiffany-blue);
+.checkmark {
+  color: #81D8D0;
   font-weight: bold;
+  margin-right: 10px;
+}
+
+.item-text {
+  flex: 1;
+}
+
+.start-section {
+  text-align: center;
+  margin-top: 40px;
 }
 
 .start-button {
-  text-align: center;
-  margin-top: 30px;
-}
-
-button {
-  background: var(--tiffany-blue);
+  background: #81D8D0;
   color: white;
   border: none;
   padding: 15px 40px;
-  border-radius: 30px;
   font-size: 1.2rem;
+  border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
-  background: var(--tiffany-dark);
+.start-button:hover {
+  background: #6BC4BC;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
-  .intro-card {
+  .introduction-page {
+    padding: 15px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .content {
     padding: 20px;
   }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  .process-list {
-    grid-template-columns: 1fr;
-  }
-
-  button {
-    width: 100%;
-    padding: 12px 20px;
-  }
-
-  .process-item {
-    width: 100%;
-  }
   
-  .process-details {
-    margin-left: 45px;
-  }
-}
-
-@media (min-width: 769px) {
-  .process-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  h2 {
+    font-size: 1.5rem;
   }
   
   .process-item {
-    width: 100%;
-  }
-  
-  .process-details {
-    position: relative;
-    max-height: 200px;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.5);
-    margin-left: 45px;
   }
-
-  .process-header {
-    cursor: pointer;
+  
+  .item-number {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+    margin-top: 2px;
   }
-
-  .process-header:hover {
-    background: rgba(129, 216, 208, 0.2);
+  
+  .item-header {
+    min-height: 30px;
+  }
+  
+  .item-header h3 {
+    font-size: 1.1rem;
   }
 }
 </style> 

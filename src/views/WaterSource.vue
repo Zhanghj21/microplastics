@@ -1,423 +1,482 @@
 <template>
-  <div class="survey-page">
-    <div class="page-header">
-      <h2>第一部分：环境水源</h2>
+  <div class="water-source-page">
+    <div class="header">
+      <h1>{{ $t('waterSource.title') }}</h1>
     </div>
     
-    <div class="info-card">
-      <div class="card-header">
-        <h3>水源摄入量说明</h3>
-      </div>
-      <div class="card-content">
-        <p class="intro-text">请输入日常摄入的三种类型水源的摄入量，单位为毫升（mL）</p>
-        <div class="info-list">
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">标准水源水</p>
-              <p class="item-subtitle">（如纯净水、净化水）</p>
-              <p class="item-data">每100毫升含 <strong>0.22</strong> 个微塑料</p>
-            </div>
+    <div class="content">
+      <div class="info-section">
+        <h2>{{ $t('waterSource.infoTitle') }}</h2>
+        <p>{{ $t('waterSource.infoDescription') }}</p>
+        
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="card-icon">💧</div>
+            <h3>{{ $t('waterSource.tapWater.title') }}</h3>
+            <p class="subtitle">{{ $t('waterSource.tapWater.subtitle') }}</p>
+            <p class="description">{{ $t('waterSource.tapWater.description') }}</p>
           </div>
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">未经处理的水</p>
-              <p class="item-subtitle">（如山泉水、井水）</p>
-              <p class="item-data">每100毫升含 <strong>330</strong> 个微塑料</p>
-            </div>
+          
+          <div class="info-card">
+            <div class="card-icon">🚰</div>
+            <h3>{{ $t('waterSource.bottledWater.title') }}</h3>
+            <p class="subtitle">{{ $t('waterSource.bottledWater.subtitle') }}</p>
+            <p class="description">{{ $t('waterSource.bottledWater.description') }}</p>
           </div>
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">处理后的水</p>
-              <p class="item-subtitle">（如市政自来水）</p>
-              <p class="item-data">每100毫升含 <strong>46</strong> 个微塑料</p>
-            </div>
+          
+          <div class="info-card">
+            <div class="card-icon">🌊</div>
+            <h3>{{ $t('waterSource.otherWater.title') }}</h3>
+            <p class="subtitle">{{ $t('waterSource.otherWater.subtitle') }}</p>
+            <p class="description">{{ $t('waterSource.otherWater.description') }}</p>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="input-section">
-      <div class="input-group">
-        <label>标准水源水（毫升/日）</label>
-        <div class="input-row">
+      
+      <div class="input-section">
+        <h2>{{ $t('waterSource.inputTitle') }}</h2>
+        <div class="input-description">
+          <p>{{ $t('waterSource.inputDescription') }}</p>
+        </div>
+        
+        <div class="input-group">
+          <label for="tapWater">{{ $t('waterSource.tapWater.title') }}</label>
           <div class="input-wrapper">
             <input 
               type="text" 
-              v-model="waterData.purified"
-              placeholder="如纯净水、净化水"
-              @input="validateInput('purified')"
-            />
+              id="tapWater" 
+              v-model="tapWater" 
+              :placeholder="$t('waterSource.inputPlaceholder')"
+              @input="validateInput"
+            >
             <span class="unit">mL</span>
           </div>
           <div class="reference">
-            <p>💡 参考：普通矿泉水瓶容量为500mL，大瓶装为1.5L</p>
+            <p>{{ $t('waterSource.reference.bottle') }}</p>
           </div>
+          <span class="error-message" v-if="errors.tapWater">{{ errors.tapWater }}</span>
         </div>
-        <span class="error-message" v-if="errors.purified">{{ errors.purified }}</span>
-      </div>
-
-      <div class="input-group">
-        <label>未经处理的水（毫升/日）</label>
-        <div class="input-row">
+        
+        <div class="input-group">
+          <label for="bottledWater">{{ $t('waterSource.bottledWater.title') }}</label>
           <div class="input-wrapper">
             <input 
               type="text" 
-              v-model="waterData.untreated"
-              placeholder="如山泉水、井水"
-              @input="validateInput('untreated')"
-            />
+              id="bottledWater" 
+              v-model="bottledWater" 
+              :placeholder="$t('waterSource.inputPlaceholder')"
+              @input="validateInput"
+            >
             <span class="unit">mL</span>
           </div>
           <div class="reference">
-            <p>💡 参考：普通矿泉水瓶容量为500mL，大瓶装为1.5L</p>
+            <p>{{ $t('waterSource.reference.bottle') }}</p>
           </div>
+          <span class="error-message" v-if="errors.bottledWater">{{ errors.bottledWater }}</span>
         </div>
-        <span class="error-message" v-if="errors.untreated">{{ errors.untreated }}</span>
-      </div>
-
-      <div class="input-group">
-        <label>处理后的水（毫升/日）</label>
-        <div class="input-row">
+        
+        <div class="input-group">
+          <label for="otherWater">{{ $t('waterSource.otherWater.title') }}</label>
           <div class="input-wrapper">
             <input 
               type="text" 
-              v-model="waterData.treated"
-              placeholder="如市政自来水"
-              @input="validateInput('treated')"
-            />
+              id="otherWater" 
+              v-model="otherWater" 
+              :placeholder="$t('waterSource.inputPlaceholder')"
+              @input="validateInput"
+            >
             <span class="unit">mL</span>
           </div>
           <div class="reference">
-            <p>💡 参考：成年人每天建议饮水量为1500-2000mL，相当于3-4瓶500mL矿泉水</p>
+            <p>{{ $t('waterSource.reference.daily') }}</p>
           </div>
+          <span class="error-message" v-if="errors.otherWater">{{ errors.otherWater }}</span>
         </div>
-        <span class="error-message" v-if="errors.treated">{{ errors.treated }}</span>
       </div>
-    </div>
-
-    <div class="navigation-buttons">
-      <button class="next-button" @click="nextPage">下一页</button>
+      
+      <div class="navigation-buttons">
+        <button @click="goBack" class="nav-button prev">
+          {{ $t('common.previous') }}
+        </button>
+        <button @click="nextStep" class="nav-button next">
+          {{ $t('common.next') }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-import { ref, reactive } from 'vue'
+import { rates } from '../store'
 
 export default {
   name: 'WaterSource',
   setup() {
     const store = useStore()
-    const router = useRouter()
-    
-    const waterData = reactive({
-      purified: store.state.waterData.purified,
-      untreated: store.state.waterData.untreated,
-      treated: store.state.waterData.treated
-    })
-
-    const errors = reactive({
-      purified: '',
-      untreated: '',
-      treated: ''
-    })
-
-    const validateInput = (field) => {
-      const value = waterData[field]
+    return { store, rates }
+  },
+  data() {
+    return {
+      tapWater: '',
+      bottledWater: '',
+      otherWater: '',
+      errors: {
+        tapWater: '',
+        bottledWater: '',
+        otherWater: ''
+      }
+    }
+  },
+  methods: {
+    validateInput(event) {
+      const field = event.target.id
+      const value = event.target.value
+      
       if (value === '') {
-        errors[field] = ''
+        this.errors[field] = ''
+        return
+      }
+      
+      // 检查是否包含非数字字符（除了小数点）
+      if (!/^\d*\.?\d*$/.test(value)) {
+        this.errors[field] = this.$t('common.error.number')
+        return
+      }
+      
+      // 检查是否超过一个小数点
+      if ((value.match(/\./g) || []).length > 1) {
+        this.errors[field] = this.$t('common.error.number')
         return
       }
       
       const num = parseFloat(value)
       if (isNaN(num) || num < 0) {
-        errors[field] = '请输入大于等于0的数字'
+        this.errors[field] = this.$t('common.error.number')
         return
       }
       
-      errors[field] = ''
-    }
-
-    const validateAll = () => {
-      validateInput('purified')
-      validateInput('untreated')
-      validateInput('treated')
-      return !errors.purified && !errors.untreated && !errors.treated
-    }
-
-    const nextPage = () => {
-      if (!validateAll()) {
-        // 找到第一个有错误的输入框并滚动到它
-        const firstError = document.querySelector('.error-message:not(:empty)')
-        if (firstError) {
-          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      this.errors[field] = ''
+    },
+    goBack() {
+      this.$router.push('/')
+    },
+    nextStep() {
+      // 检查是否有错误
+      const hasError = Object.values(this.errors).some(error => error !== '')
+      
+      if (hasError) {
+        // 找到第一个有错误的输入框
+        const firstErrorField = Object.keys(this.errors).find(key => this.errors[key] !== '')
+        if (firstErrorField) {
+          const errorElement = document.getElementById(firstErrorField)
+          if (errorElement) {
+            // 添加滚动动画
+            const targetPosition = errorElement.getBoundingClientRect().top + window.pageYOffset - 100
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            })
+            errorElement.focus()
+          }
         }
         return
       }
-
+      
       // 计算微塑料数量
       const microplastics = {
-        purified: parseFloat(waterData.purified || 0) * 0.0022,
-        untreated: parseFloat(waterData.untreated || 0) * 3.3075,
-        treated: parseFloat(waterData.treated || 0) * 0.4655
+        purified: (parseFloat(this.tapWater || 0) / 100) * rates.water.purified,
+        untreated: (parseFloat(this.bottledWater || 0) / 100) * rates.water.untreated,
+        treated: (parseFloat(this.otherWater || 0) / 100) * rates.water.treated
       }
-
+      
       // 保存数据到 store
-      store.commit('updateWaterData', {
-        ...waterData,
+      this.store.commit('updateWaterData', {
+        purified: this.tapWater,
+        untreated: this.bottledWater,
+        treated: this.otherWater,
         microplastics
       })
       
-      // 跳转到下一页
-      router.push('/food')
-    }
-
-    return {
-      waterData,
-      errors,
-      validateInput,
-      validateAll,
-      nextPage
+      this.$router.push('/food')
     }
   }
 }
 </script>
 
 <style scoped>
-.survey-page {
+.water-source-page {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.page-header {
+.header {
   text-align: center;
-  margin-bottom: 30px;
-  position: relative;
+  margin-bottom: 40px;
 }
 
-.page-header h2 {
-  font-size: var(--font-size-xl);
-  color: var(--tiffany-dark);
-  margin: 0;
-  padding: 10px 0;
-  position: relative;
-  display: inline-block;
+.header h1 {
+  font-size: 2.5rem;
+  color: #333;
 }
 
-.page-header h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background: var(--tiffany-blue);
-}
-
-.info-card {
-  background: white;
-  border-radius: 15px;
-  padding: 0;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
-
-.card-header {
-  background: var(--tiffany-blue);
-  padding: 20px;
-  text-align: center;
-}
-
-.card-header h3 {
-  color: white;
-  margin: 0;
-  font-size: var(--font-size-lg);
-}
-
-.card-content {
-  padding: 25px;
-}
-
-.intro-text {
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  font-size: 1.1em;
-  text-align: center;
-}
-
-.info-item {
-  margin-bottom: 20px;
-  background: rgba(129, 216, 208, 0.05);
+.content {
+  background: #fff;
   border-radius: 10px;
-  padding: 15px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.info-item:last-child {
-  margin-bottom: 0;
+.info-section,
+.input-section {
+  margin-bottom: 40px;
 }
 
-.item-content {
-  margin-left: 0;
+h2 {
+  font-size: 1.8rem;
+  color: #444;
+  margin-bottom: 20px;
 }
 
-.item-title {
-  font-size: 1.1em;
-  color: var(--tiffany-dark);
-  margin: 0 0 5px 0;
-  font-weight: bold;
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 20px;
 }
 
-.item-subtitle {
-  color: var(--text-secondary);
-  margin: 0 0 8px 0;
-  font-size: 0.9em;
-}
-
-.item-data {
-  font-size: 1em;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.navigation-buttons {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
   margin-top: 30px;
 }
 
-.next-button {
-  padding: 12px 30px;
-  border-radius: 25px;
-  font-size: 1.1rem;
-  min-width: 120px;
-  background: var(--tiffany-blue);
-  color: white;
+.info-card {
+  background: rgba(129, 216, 208, 0.05);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(129, 216, 208, 0.2);
+  transition: all 0.3s ease;
 }
 
-.next-button:hover {
-  background: var(--tiffany-dark);
-  transform: translateY(-2px);
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(129, 216, 208, 0.15);
+  border-color: #81D8D0;
 }
 
-.input-section {
-  background: white;
-  border-radius: 15px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
 }
 
-.input-group {
-  margin-bottom: 20px;
+.info-card h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 5px;
 }
 
-.input-group:last-child {
+.info-card .subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.info-card .description {
+  font-size: 1rem;
+  color: #666;
   margin-bottom: 0;
 }
 
-.input-row {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.reference-info {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f0f7ff;
+  border-radius: 8px;
+  border-left: 4px solid #81D8D0;
+}
+
+.reference-info p {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.reference-info p:last-child {
+  margin-bottom: 0;
+}
+
+.input-group {
+  margin-bottom: 25px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
 }
 
 .input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
 }
 
-input {
+.input-wrapper input {
   width: 100%;
-  padding: 12px 45px 12px 15px;
-  border: 2px solid var(--tiffany-light);
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  border: 2px solid #81D8D0;
   border-radius: 8px;
-  font-size: 1rem;
   transition: all 0.3s ease;
+  -moz-appearance: textfield;
+  background-color: rgba(129, 216, 208, 0.05);
+  color: #2c3e50;
 }
 
-input:focus {
+.input-wrapper input:focus {
   outline: none;
-  border-color: var(--tiffany-blue);
+  border-color: #81D8D0;
+  background-color: white;
   box-shadow: 0 0 0 3px rgba(129, 216, 208, 0.2);
+}
+
+.input-wrapper input::-webkit-outer-spin-button,
+.input-wrapper input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* 移动端placeholder样式 */
+@media (max-width: 768px) {
+  .water-source-page {
+    padding: 15px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .content {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .nav-button {
+    padding: 10px 25px;
+    font-size: 1rem;
+  }
+
+  .input-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 .unit {
   position: absolute;
   right: 15px;
-  color: var(--text-secondary);
-}
-
-.error-message {
-  color: var(--error-color);
-  font-size: 0.9rem;
-  margin-top: 5px;
+  color: #666;
+  font-size: 1.1rem;
 }
 
 .reference {
-  width: 100%;
+  margin-top: 8px;
   padding: 12px 15px;
   background: rgba(129, 216, 208, 0.1);
-  border-radius: 8px;
-  font-size: 0.9em;
-  color: var(--text-secondary);
-  font-style: italic;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #666;
+  box-shadow: 0 2px 4px rgba(129, 216, 208, 0.1);
 }
 
 .reference p {
+  font-style: italic;
   margin: 0;
 }
 
-@media (max-width: 768px) {
-  .survey-page {
-    padding: 15px;
-  }
+.error-message {
+  display: block;
+  margin-top: 8px;
+  color: #ff4d4f;
+  font-size: 0.9rem;
+}
 
-  .page-header {
-    margin-bottom: 20px;
-  }
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
 
-  .page-number {
-    font-size: 1.8rem;
-  }
+.nav-button {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
 
-  .input-section {
-    padding: 20px;
-  }
+.nav-button.prev {
+  background: #f8f9fa;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
 
-  .next-button {
-    width: 100%;
-  }
+.nav-button.next {
+  background: #81D8D0;
+  color: white;
+  box-shadow: 0 2px 4px rgba(129, 216, 208, 0.3);
+}
 
-  .input-row {
-    gap: 8px;
-  }
+.nav-button:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
+}
 
-  .reference {
-    width: 100%;
-  }
+.nav-button.prev:hover {
+  background: #f0f0f0;
+}
 
-  .card-content {
-    padding: 15px;
-  }
-  
-  .info-item {
-    padding: 12px;
-  }
-  
-  .item-title {
-    font-size: 1em;
-  }
-  
-  .item-subtitle {
-    font-size: 0.85em;
-  }
+.nav-button.next:hover:not(:disabled) {
+  background: #6BC4BC;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(129, 216, 208, 0.4);
+}
+
+.input-description {
+  background: rgba(129, 216, 208, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #81D8D0;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(129, 216, 208, 0.1);
+}
+
+.input-description p {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 </style> 

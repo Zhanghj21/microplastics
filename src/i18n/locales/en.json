@@ -1,0 +1,40 @@
+{
+  "common": {
+    "day": "day",
+    "previous": "Previous",
+    "next": "Next",
+    "error": {
+      "number": "Please enter a valid number",
+      "integer": "Please enter an integer"
+    },
+    "language": "Language"
+  },
+  "dailyItems": {
+    "title": "Part 4: Daily Items Release",
+    "description": "Daily Items Release Description",
+    "introText": "Please enter the following usage frequency:",
+    "error": {
+      "decimal": "Please enter an integer"
+    },
+    "types": {
+      "teaBags": {
+        "name": "Plastic Tea Bags",
+        "subtitle": "(e.g., tea bags, tea sachets)",
+        "data": "{0} microplastics per cup",
+        "label": "Number of cups of tea from plastic tea bags (cups/day)",
+        "placeholder": "Please enter the number of cups (1 tea bag usually makes 1 cup)",
+        "unit": "cups",
+        "reference": "💡 Reference: 1 cup ≈ 200~250ml. For tea bag reuse: If one tea bag is used multiple times, count the actual number of cups consumed"
+      },
+      "plasticUtensils": {
+        "name": "Plastic Utensils",
+        "subtitle": "(e.g., disposable cutlery, plastic containers)",
+        "data": "Average {0} microplastics per use",
+        "label": "Number of times using plastic utensils (times/day)",
+        "placeholder": "Enter the number of times",
+        "unit": "times",
+        "reference": "💡 Reference: Including disposable chopsticks, spoons, forks, and plastic containers"
+      }
+    }
+  }
+} 

@@ -1,0 +1,19 @@
+{
+  "food": {
+    "title": "食品摄入",
+    "description": "请输入您每天摄入的各类食品数量（克）",
+    "inputPlaceholder": "请输入数量（克）",
+    "rice": {
+      "title": "米饭",
+      "reference": "参考：一碗米饭约200克"
+    },
+    "noodles": {
+      "title": "面条",
+      "reference": "参考：一碗面条约200克"
+    },
+    "dumplings": {
+      "title": "饺子",
+      "reference": "参考：一个饺子约20克"
+    }
+  }
+} 

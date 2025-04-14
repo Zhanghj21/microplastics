@@ -1,91 +1,97 @@
 <template>
-  <div class="survey-page">
-    <div class="page-header">
-      <h2>第三部分：空气暴露</h2>
+  <div class="food-page">
+    <div class="header">
+      <h1>{{ $t('air.title') }}</h1>
     </div>
     
-    <div class="info-card">
-      <div class="card-header">
-        <h3>空气暴露说明</h3>
-      </div>
-      <div class="card-content">
-        <p class="intro-text">请输入您的体重和生活区域类型，将以此为依据计算您的每日微塑料摄入量</p>
-        <div class="info-list">
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">呼吸量计算</p>
-              <p class="item-subtitle">（基于体重计算）</p>
-              <p class="item-data">每千克体重每天呼吸量约为 <strong>12.5</strong> 升</p>
-            </div>
+    <div class="content">
+      <div class="info-section">
+        <h2>{{ $t('air.infoTitle') }}</h2>
+        <p>{{ $t('air.introText') }}</p>
+        
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="card-icon">🌬️</div>
+            <h3>{{ $t('air.breathingTitle') }}</h3>
+            <p class="subtitle">{{ $t('air.breathingSubtitle') }}</p>
+            <p class="description">{{ $t('air.breathingData') }} <strong>12.5</strong> {{ $t('air.liters') }}</p>
           </div>
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">空气微塑料含量</p>
-              <p class="item-subtitle">（不同区域含量不同）</p>
-              <p class="item-data">城市区域：每升空气含 <strong>850</strong> 个微塑料</p>
-              <p class="item-data">郊区：每升空气含 <strong>400</strong> 个微塑料</p>
-              <p class="item-data">沿海地区：每升空气含 <strong>550</strong> 个微塑料</p>
-            </div>
+          
+          <div class="info-card">
+            <div class="card-icon">🏙️</div>
+            <h3>{{ $t('air.microplasticsTitle') }}</h3>
+            <p class="subtitle">{{ $t('air.microplasticsSubtitle') }}</p>
+            <p class="description">{{ $t('air.cityData') }} <strong>850</strong> {{ $t('air.particlesPerLiter') }}</p>
+            <p class="description">{{ $t('air.suburbData') }} <strong>400</strong> {{ $t('air.particlesPerLiter') }}</p>
+            <p class="description">{{ $t('air.coastalData') }} <strong>550</strong> {{ $t('air.particlesPerLiter') }}</p>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="input-section">
-      <div class="input-group">
-        <label>体重（kg）</label>
-        <div class="input-row">
+      
+      <div class="input-section">
+        <h2>{{ $t('air.infoTitle') }}</h2>
+        <div class="input-description">
+          <p>{{ $t('air.introText') }}</p>
+        </div>
+        
+        <div class="input-group">
+          <label for="weight">{{ $t('air.weightLabel') }}</label>
           <div class="input-wrapper">
             <input 
               type="text" 
+              id="weight" 
               v-model="airData.weight"
-              placeholder="请输入体重"
+              :placeholder="$t('air.weightPlaceholder')"
               @input="validateInput('weight')"
             />
             <span class="unit">kg</span>
           </div>
+          <span class="error-message" v-if="errors.weight">{{ errors.weight }}</span>
         </div>
-        <span class="error-message" v-if="errors.weight">{{ errors.weight }}</span>
-      </div>
 
-      <div class="input-group">
-        <label>生活区域类型</label>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input 
-              type="radio" 
-              v-model="airData.areaType" 
-              value="city"
-            >
-            <span>城市区域</span>
-          </label>
-          <label class="radio-label">
-            <input 
-              type="radio" 
-              v-model="airData.areaType" 
-              value="suburb"
-            >
-            <span>郊区</span>
-          </label>
-          <label class="radio-label">
-            <input 
-              type="radio" 
-              v-model="airData.areaType" 
-              value="coastal"
-            >
-            <span>沿海地区</span>
-          </label>
+        <div class="input-group">
+          <label>{{ $t('air.areaTypeLabel') }}</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                v-model="airData.areaType" 
+                value="city"
+              >
+              <span>{{ $t('air.cityArea') }}</span>
+            </label>
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                v-model="airData.areaType" 
+                value="suburb"
+              >
+              <span>{{ $t('air.suburbArea') }}</span>
+            </label>
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                v-model="airData.areaType" 
+                value="coastal"
+              >
+              <span>{{ $t('air.coastalArea') }}</span>
+            </label>
+          </div>
+          <div class="reference">
+            <p>💡 <i>{{ $t('air.areaReference') }}</i></p>
+          </div>
+          <span class="error-message" v-if="errors.areaType">{{ errors.areaType }}</span>
         </div>
-        <div class="reference">
-          <p>💡 参考：城市区域包括商业区、住宅区等；郊区包括城乡结合部、卫星城等；沿海地区包括海滨城市、港口等</p>
-        </div>
-        <span class="error-message" v-if="errors.areaType">{{ errors.areaType }}</span>
       </div>
-    </div>
-
-    <div class="navigation-buttons">
-      <button class="prev-button" @click="previousPage">上一页</button>
-      <button class="next-button" @click="nextPage">下一页</button>
+      
+      <div class="navigation-buttons">
+        <button @click="previousPage" class="nav-button prev">
+          {{ $t('common.previous') }}
+        </button>
+        <button @click="nextPage" class="nav-button next">
+          {{ $t('common.next') }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -94,12 +100,14 @@
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Air',
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { t } = useI18n()
     
     const airData = reactive({
       weight: store.state.airData.weight,
@@ -114,14 +122,14 @@ export default {
     const validateInput = (field) => {
       const value = airData[field]
       if (value === '') {
-        errors[field] = field === 'weight' ? '请输入体重' : '请选择生活区域类型'
+        errors[field] = field === 'weight' ? t('air.errors.weightRequired') : t('air.errors.areaTypeRequired')
         return false
       }
       
       if (field === 'weight') {
         const num = parseFloat(value)
         if (isNaN(num) || num < 0) {
-          errors[field] = '请输入大于等于0的数字'
+          errors[field] = t('air.errors.weightInvalid')
           return false
         }
       }
@@ -132,14 +140,13 @@ export default {
 
     const validateAll = () => {
       const weightValid = validateInput('weight')
-      const areaTypeValid = airData.areaType ? true : (errors.areaType = '请选择生活区域类型', false)
+      const areaTypeValid = airData.areaType ? true : (errors.areaType = t('air.errors.areaTypeRequired'), false)
       
       return weightValid && areaTypeValid
     }
 
     const nextPage = () => {
       if (!validateAll()) {
-        // 找到第一个有错误的输入框并滚动到它
         const firstError = document.querySelector('.error-message:not(:empty)')
         if (firstError) {
           firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -169,176 +176,170 @@ export default {
 </script>
 
 <style scoped>
-.survey-page {
+.food-page {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.page-header {
+.header {
   text-align: center;
-  margin-bottom: 30px;
-  position: relative;
+  margin-bottom: 40px;
 }
 
-.page-header h2 {
-  font-size: var(--font-size-xl);
-  color: var(--tiffany-dark);
-  margin: 0;
-  padding: 10px 0;
-  position: relative;
-  display: inline-block;
+.header h1 {
+  font-size: 2.5rem;
+  color: #333;
 }
 
-.page-header h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background: var(--tiffany-blue);
+.content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.navigation-buttons {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
+.info-section,
+.input-section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
   margin-top: 30px;
 }
 
-.prev-button,
-.next-button {
-  padding: 12px 30px;
-  border-radius: 25px;
-  font-size: 1.1rem;
-  min-width: 120px;
-}
-
-.next-button {
-  background: var(--tiffany-blue);
-  color: white;
-}
-
-.prev-button {
-  background: white;
-  border: 2px solid var(--tiffany-blue);
-  color: var(--tiffany-blue);
-}
-
 .info-card {
-  background: white;
-  border-radius: 15px;
-  padding: 0;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
-
-.card-header {
-  background: var(--tiffany-blue);
-  padding: 20px;
-  text-align: center;
-}
-
-.card-header h3 {
-  color: white;
-  margin: 0;
-  font-size: var(--font-size-lg);
-}
-
-.card-content {
-  padding: 25px;
-}
-
-.intro-text {
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  font-size: 1.1em;
-  text-align: center;
-}
-
-.info-item {
-  margin-bottom: 20px;
   background: rgba(129, 216, 208, 0.05);
-  border-radius: 10px;
-  padding: 15px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(129, 216, 208, 0.2);
+  transition: all 0.3s ease;
 }
 
-.info-item:last-child {
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(129, 216, 208, 0.15);
+  border-color: #81D8D0;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.info-card h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.info-card .subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.info-card .description {
+  font-size: 1rem;
+  color: #666;
   margin-bottom: 0;
 }
 
-.item-content {
-  margin-left: 0;
+.input-section {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.item-title {
-  font-size: 1.1em;
-  color: var(--tiffany-dark);
-  margin: 0 0 5px 0;
-  font-weight: bold;
-}
-
-.item-subtitle {
-  color: var(--text-secondary);
-  margin: 0 0 8px 0;
-  font-size: 0.9em;
-}
-
-.item-data {
-  font-size: 1em;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.input-row {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.reference {
+.input-description {
   background: rgba(129, 216, 208, 0.1);
-  padding: 10px;
+  padding: 20px;
   border-radius: 8px;
-  margin-top: 5px;
+  border-left: 4px solid #81D8D0;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(129, 216, 208, 0.1);
 }
 
-.reference p {
+.input-description p {
+  color: #666;
   margin: 0;
-  color: var(--text-secondary);
-  font-size: 0.9em;
+  line-height: 1.6;
+  font-size: 1.1rem;
 }
 
-@media (max-width: 768px) {
-  .input-row {
-    gap: 8px;
-  }
+.input-group {
+  margin-bottom: 25px;
+}
 
-  .reference {
-    padding: 8px;
-  }
+.input-group label {
+  display: block;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
+}
 
-  .reference p {
-    font-size: 0.8em;
-  }
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  border: 2px solid #81D8D0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background-color: rgba(129, 216, 208, 0.05);
+  color: #2c3e50;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: #81D8D0;
+  background-color: white;
+}
+
+.input-wrapper .unit {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
 }
 
 .radio-group {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 .radio-label {
   display: flex;
   align-items: center;
+  gap: 10px;
   cursor: pointer;
   padding: 10px;
   border-radius: 8px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .radio-label:hover {
@@ -346,24 +347,109 @@ export default {
 }
 
 .radio-label input[type="radio"] {
-  margin-right: 10px;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  accent-color: #81D8D0;
+}
+
+.reference {
+  margin-top: 8px;
+  padding: 12px 15px;
+  background: rgba(129, 216, 208, 0.1);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #666;
+  box-shadow: 0 2px 4px rgba(129, 216, 208, 0.1);
+}
+
+.reference p {
+  font-style: italic;
+  margin: 0;
+}
+
+.error-message {
+  display: block;
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.nav-button {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  border-radius: 30px;
   cursor: pointer;
-  accent-color: var(--tiffany-blue);
+  transition: all 0.3s ease;
+  border: none;
 }
 
-.radio-label input[type="radio"]:checked + span {
-  color: var(--tiffany-blue);
-  font-weight: bold;
+.nav-button.prev {
+  background: #f8f9fa;
+  color: #666;
+  border: 1px solid #e0e0e0;
 }
 
-.radio-label input[type="radio"]:checked {
-  border-color: var(--tiffany-blue);
+.nav-button.next {
+  background: #81D8D0;
+  color: white;
+  box-shadow: 0 2px 4px rgba(129, 216, 208, 0.3);
 }
 
-.radio-label input[type="radio"]:focus {
-  outline: 2px solid var(--tiffany-blue);
-  outline-offset: 2px;
+.nav-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button.prev:hover {
+  background: #f0f0f0;
+}
+
+.nav-button.next:hover {
+  background: #6BC4BC;
+  box-shadow: 0 4px 8px rgba(129, 216, 208, 0.4);
+}
+
+@media (max-width: 768px) {
+  .food-page {
+    padding: 15px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .content {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .nav-button {
+    padding: 10px 25px;
+    font-size: 1rem;
+  }
+
+  .input-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 </style> 

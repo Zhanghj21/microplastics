@@ -1,0 +1,19 @@
+{
+  "food": {
+    "title": "Food Intake",
+    "description": "Please enter your daily intake of various foods (grams)",
+    "inputPlaceholder": "Enter amount",
+    "rice": {
+      "title": "Rice",
+      "reference": "Reference: One bowl of rice is about 200g"
+    },
+    "noodles": {
+      "title": "Noodles",
+      "reference": "Reference: One bowl of noodles is about 200g"
+    },
+    "dumplings": {
+      "title": "Dumplings",
+      "reference": "Reference: One dumpling is about 20g"
+    }
+  }
+} 

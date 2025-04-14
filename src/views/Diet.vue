@@ -1,77 +1,82 @@
 <template>
-  <div class="survey-page">
-    <div class="page-header">
-      <h2>第六部分：饮食习惯</h2>
+  <div class="food-page">
+    <div class="header">
+      <h1>{{ $t('diet.title') }}</h1>
     </div>
     
-    <div class="info-card">
-      <div class="card-header">
-        <h3>饮食习惯说明</h3>
-      </div>
-      <div class="card-content">
-        <p class="intro-text">请输入您的饮食习惯相关信息：</p>
-        <div class="info-list">
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">海鲜</p>
-              <p class="item-subtitle">（如鱼类、贝类等）</p>
-              <p class="item-data">每克含 <strong>0.8</strong> 个微塑料</p>
-            </div>
+    <div class="content">
+      <div class="info-section">
+        <h2>{{ $t('diet.description') }}</h2>
+        <p>{{ $t('diet.introText') }}</p>
+        
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="card-icon">🐟</div>
+            <h3>{{ $t('diet.types.seafood.name') }}</h3>
+            <p class="subtitle">{{ $t('diet.types.seafood.subtitle') }}</p>
+            <p class="description">{{ $t('diet.types.seafood.data', [0.8]) }}</p>
           </div>
-          <div class="info-item">
-            <div class="item-content">
-              <p class="item-title">啤酒</p>
-              <p class="item-subtitle">（如瓶装啤酒、罐装啤酒等）</p>
-              <p class="item-data">每升含 <strong>21</strong> 个微塑料</p>
-            </div>
+          
+          <div class="info-card">
+            <div class="card-icon">🍺</div>
+            <h3>{{ $t('diet.types.beer.name') }}</h3>
+            <p class="subtitle">{{ $t('diet.types.beer.subtitle') }}</p>
+            <p class="description">{{ $t('diet.types.beer.data', [21]) }}</p>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="input-section">
-      <div class="input-group">
-        <label>海鲜（克/月）</label>
-        <div class="input-row">
+      
+      <div class="input-section">
+        <h2>{{ $t('diet.description') }}</h2>
+        <div class="input-description">
+          <p>{{ $t('diet.introText') }}</p>
+        </div>
+        
+        <div class="input-group">
+          <label for="seafood">{{ $t('diet.types.seafood.label') }}</label>
           <div class="input-wrapper">
             <input 
               type="text" 
+              id="seafood"
               v-model="dietData.seafood"
-              placeholder="每月食用海鲜量"
+              :placeholder="$t('diet.types.seafood.placeholder')"
               @input="validateInput('seafood')"
-            />
-            <span class="unit">g</span>
+            >
+            <span class="unit">{{ $t('diet.types.seafood.unit') }}/{{ $t('common.month') }}</span>
           </div>
           <div class="reference">
-            <p>💡 参考：一条普通大小的鱼约200-300g，建议根据实际食用量填写</p>
+            <p>{{ $t('diet.types.seafood.reference') }}</p>
           </div>
+          <span class="error-message" v-if="errors.seafood">{{ errors.seafood }}</span>
         </div>
-        <span class="error-message" v-if="errors.seafood">{{ errors.seafood }}</span>
-      </div>
 
-      <div class="input-group">
-        <label>啤酒（升/月）</label>
-        <div class="input-row">
+        <div class="input-group">
+          <label for="beer">{{ $t('diet.types.beer.label') }}</label>
           <div class="input-wrapper">
             <input 
               type="text" 
+              id="beer"
               v-model="dietData.beer"
-              placeholder="每月饮用啤酒量"
+              :placeholder="$t('diet.types.beer.placeholder')"
               @input="validateInput('beer')"
-            />
-            <span class="unit">L</span>
+            >
+            <span class="unit">{{ $t('diet.types.beer.unit') }}/{{ $t('common.month') }}</span>
           </div>
           <div class="reference">
-            <p>💡 参考：一瓶普通啤酒约330ml，一罐啤酒约500ml，建议根据实际饮用量填写</p>
+            <p>{{ $t('diet.types.beer.reference') }}</p>
           </div>
+          <span class="error-message" v-if="errors.beer">{{ errors.beer }}</span>
         </div>
-        <span class="error-message" v-if="errors.beer">{{ errors.beer }}</span>
       </div>
-    </div>
-
-    <div class="navigation-buttons">
-      <button class="prev-button" @click="previousPage">上一页</button>
-      <button class="analyze-button" @click="analyze">分析结果</button>
+      
+      <div class="navigation-buttons">
+        <button @click="previousPage" class="nav-button prev">
+          {{ $t('common.previous') }}
+        </button>
+        <button @click="analyze" class="nav-button next">
+          {{ $t('common.analyze') }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -81,12 +86,14 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { reactive } from 'vue'
 import { rates } from '../store'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Diet',
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { t } = useI18n()
     
     const dietData = reactive({
       seafood: store.state.dietData.seafood || '',
@@ -107,7 +114,7 @@ export default {
       
       const num = parseFloat(value)
       if (isNaN(num) || num < 0) {
-        errors[field] = '请输入大于等于0的数字'
+        errors[field] = t('common.error.number')
         return false
       }
       
@@ -120,7 +127,6 @@ export default {
       let hasError = false
       
       fields.forEach(field => {
-        // 如果字段为空，则跳过验证
         if (dietData[field] === '') {
           return
         }
@@ -134,7 +140,6 @@ export default {
     }
 
     const analyze = () => {
-      // 检查所有字段，如果为空则设置为0
       const fields = ['seafood', 'beer']
       fields.forEach(field => {
         if (dietData[field] === '') {
@@ -142,11 +147,9 @@ export default {
         }
       })
       
-      // 只有当用户输入了内容时才进行验证
       const hasInput = fields.some(field => dietData[field] !== '0')
       
       if (hasInput && !validateAll()) {
-        // 找到第一个有错误的输入框并滚动到它
         const firstError = document.querySelector('.error-message:not(:empty)')
         if (firstError) {
           firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -154,13 +157,12 @@ export default {
         return
       }
 
-      // 计算微塑料释放量（日均）
       const processedData = {
         seafood: parseFloat(dietData.seafood) || 0,
         beer: parseFloat(dietData.beer) || 0,
         microplastics: {
-          seafood: (parseFloat(dietData.seafood) || 0) * rates.diet.seafood / 31,  // 转换为日均
-          beer: (parseFloat(dietData.beer) || 0) * rates.diet.beer / 31  // 转换为日均
+          seafood: (parseFloat(dietData.seafood) || 0) * rates.diet.seafood / 31,
+          beer: (parseFloat(dietData.beer) || 0) * rates.diet.beer / 31
         }
       }
 
@@ -186,160 +188,259 @@ export default {
 </script>
 
 <style scoped>
-.survey-page {
+.food-page {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.page-header {
+.header {
   text-align: center;
-  margin-bottom: 30px;
-  position: relative;
+  margin-bottom: 40px;
 }
 
-.page-header h2 {
-  font-size: var(--font-size-xl);
-  color: var(--tiffany-dark);
-  margin: 0;
-  padding: 10px 0;
-  position: relative;
-  display: inline-block;
+.header h1 {
+  font-size: 2.5rem;
+  color: #333;
 }
 
-.page-header h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 3px;
-  background: var(--tiffany-blue);
+.content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-section,
+.input-section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
 }
 
 .info-card {
-  background: white;
-  border-radius: 15px;
-  padding: 0;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
-
-.card-header {
-  background: var(--tiffany-blue);
-  padding: 20px;
-  text-align: center;
-}
-
-.card-header h3 {
-  color: white;
-  margin: 0;
-  font-size: var(--font-size-lg);
-}
-
-.card-content {
-  padding: 25px;
-}
-
-.intro-text {
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  font-size: 1.1em;
-  text-align: center;
-}
-
-.info-item {
-  margin-bottom: 20px;
   background: rgba(129, 216, 208, 0.05);
-  border-radius: 10px;
-  padding: 15px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(129, 216, 208, 0.2);
+  transition: all 0.3s ease;
 }
 
-.info-item:last-child {
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(129, 216, 208, 0.15);
+  border-color: #81D8D0;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.info-card h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.info-card .subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.info-card .description {
+  font-size: 1rem;
+  color: #666;
   margin-bottom: 0;
 }
 
-.item-content {
-  margin-left: 0;
+.input-section {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.item-title {
-  font-size: 1.1em;
-  color: var(--tiffany-dark);
-  margin: 0 0 5px 0;
-  font-weight: bold;
+.input-description {
+  background: rgba(129, 216, 208, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #81D8D0;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(129, 216, 208, 0.1);
 }
 
-.item-subtitle {
-  color: var(--text-secondary);
-  margin: 0 0 8px 0;
-  font-size: 0.9em;
-}
-
-.item-data {
-  font-size: 1em;
-  color: var(--text-primary);
+.input-description p {
+  color: #666;
   margin: 0;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.input-group {
+  margin-bottom: 25px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  border: 2px solid #81D8D0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  -moz-appearance: textfield;
+  background-color: rgba(129, 216, 208, 0.05);
+  color: #2c3e50;
+}
+
+.input-wrapper input::-webkit-outer-spin-button,
+.input-wrapper input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-wrapper .unit {
+  position: absolute;
+  right: 15px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.reference {
+  margin-top: 8px;
+  padding: 12px 15px;
+  background: rgba(129, 216, 208, 0.1);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #666;
+  box-shadow: 0 2px 4px rgba(129, 216, 208, 0.1);
+}
+
+.reference p {
+  font-style: italic;
+  margin: 0;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  display: block;
 }
 
 .navigation-buttons {
   display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 30px;
+  justify-content: space-between;
+  margin-top: 40px;
 }
 
-.prev-button,
-.analyze-button {
+.nav-button {
   padding: 12px 30px;
-  border-radius: 25px;
   font-size: 1.1rem;
-  min-width: 120px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
 }
 
-.analyze-button {
-  background: var(--tiffany-blue);
+.nav-button.prev {
+  background: #f8f9fa;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
+
+.nav-button.next {
+  background: #81D8D0;
   color: white;
+  box-shadow: 0 2px 4px rgba(129, 216, 208, 0.3);
 }
 
-.prev-button {
-  background: white;
-  border: 2px solid var(--tiffany-blue);
-  color: var(--tiffany-blue);
+.nav-button:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
 }
 
-.input-row {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.nav-button.prev:hover {
+  background: #f0f0f0;
 }
 
-.reference {
-  background: rgba(129, 216, 208, 0.1);
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 5px;
-}
-
-.reference p {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 0.9em;
+.nav-button.next:hover:not(:disabled) {
+  background: #6BC4BC;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(129, 216, 208, 0.4);
 }
 
 @media (max-width: 768px) {
-  .input-row {
-    gap: 8px;
+  .food-page {
+    padding: 15px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .content {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .nav-button {
+    padding: 10px 25px;
+    font-size: 1rem;
   }
 
-  .reference {
-    padding: 8px;
+  .input-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .reference p {
-    font-size: 0.8em;
+  .input-wrapper input::placeholder {
+    font-size: 0.9rem;
   }
 }
 </style> 

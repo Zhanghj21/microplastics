@@ -1,0 +1,37 @@
+{
+  "common": {
+    "day": "天",
+    "previous": "上一页",
+    "next": "下一页",
+    "error": {
+      "number": "请输入有效的数字",
+      "integer": "请输入整数"
+    },
+    "language": "语言"
+  },
+  "dailyItems": {
+    "title": "第四部分：日用品释放",
+    "description": "日用品释放说明",
+    "introText": "请输入以下使用频次：",
+    "types": {
+      "teaBags": {
+        "name": "塑料茶包饮用",
+        "subtitle": "（如袋泡茶、茶包等）",
+        "data": "每杯释放 {0} 个微塑料",
+        "label": "您饮用塑料茶包泡出的茶水量（杯/日）",
+        "placeholder": "请输入您饮用的杯数",
+        "unit": "杯",
+        "reference": "💡 参考：1杯≈200~250ml，茶包复用情况：若1个茶包泡多次，请按实际饮用杯数计算"
+      },
+      "plasticUtensils": {
+        "name": "塑料餐具使用",
+        "subtitle": "（如一次性餐具、塑料餐盒等）",
+        "data": "每次平均释放 {0} 个微塑料",
+        "label": "塑料餐具使用次数（次/日）",
+        "placeholder": "输入次数",
+        "unit": "次",
+        "reference": "💡 参考：包括一次性筷子、勺子、叉子、餐盒等塑料餐具的使用次数"
+      }
+    }
+  }
+} 

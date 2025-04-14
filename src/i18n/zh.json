@@ -1,0 +1,340 @@
+{
+  "common": {
+    "day": "天",
+    "month": "月",
+    "next": "下一页",
+    "previous": "上一页",
+    "restart": "重新开始",
+    "analyze": "分析",
+    "submit": "提交",
+    "loading": "加载中...",
+    "error": {
+      "required": "此项为必填项",
+      "number": "请输入有效的数字",
+      "min": "数值不能小于{min}",
+      "max": "数值不能大于{max}"
+    },
+    "success": "成功",
+    "inputError": "请输入大于等于0的数字",
+    "integerError": "请输入整数"
+  },
+  "introduction": {
+    "title": "PlasticountAI",
+    "process": {
+      "title": "评估流程",
+      "description": "本评估系统包含六个部分，全面评估您的微塑料摄入情况：",
+      "items": [
+        {
+          "title": "环境水源",
+          "description": "评估日常饮用水中的微塑料摄入量，包括自来水、瓶装水等不同水源。"
+        },
+        {
+          "title": "食物摄入",
+          "description": "分析日常食物中的微塑料含量，包括海鲜、蔬菜等各类食品。"
+        },
+        {
+          "title": "空气暴露",
+          "description": "评估通过呼吸摄入的微塑料数量，考虑不同环境下的暴露情况。"
+        },
+        {
+          "title": "日常用品",
+          "description": "分析日常使用的塑料制品释放的微塑料，如茶包、餐具等。"
+        },
+        {
+          "title": "衣物纺织品",
+          "description": "评估衣物洗涤过程中释放的微塑料纤维数量。"
+        },
+        {
+          "title": "饮食习惯",
+          "description": "分析特殊饮食习惯对微塑料摄入的影响，如海鲜消费频率等。"
+        }
+      ]
+    },
+    "result": {
+      "title": "评估结果",
+      "description": "完成评估后，您将获得：",
+      "items": [
+        "详细的微塑料摄入分析报告",
+        "与全球平均水平的对比",
+        "个性化的健康保护建议"
+      ]
+    },
+    "startButton": "开始评估"
+  },
+  "footer": {
+    "about": "关于我们",
+    "aboutDesc": "PlasticountAI为你提供每日摄入微塑料量的大致评估，并给出针对性的AI建议，帮助您减少微塑料暴露。",
+    "contact": "联系方式",
+    "links": "友情链接",
+    "epa": "环境保护署（EPA，美国）",
+    "who": "世界卫生组织（WHO）",
+    "oceana": "海洋保护协会（Oceana）",
+    "copyright": "PlasticountAI 版权所有"
+  },
+  "waterSource": {
+    "title": "第一部分：环境水源",
+    "infoTitle": "水源摄入量说明",
+    "infoDescription": "请输入日常摄入的三种类型水源的摄入量，单位为毫升（mL）",
+    "tapWater": {
+      "title": "标准水源水",
+      "subtitle": "（如纯净水、净化水）",
+      "description": "每100毫升含 0.22 个微塑料"
+    },
+    "bottledWater": {
+      "title": "未经处理的水",
+      "subtitle": "（如山泉水、井水）",
+      "description": "每100毫升含 330 个微塑料"
+    },
+    "otherWater": {
+      "title": "处理后的水",
+      "subtitle": "（如市政自来水）",
+      "description": "每100毫升含 46 个微塑料"
+    },
+    "inputTitle": "请输入您的日常饮水量",
+    "inputDescription": "请根据实际情况填写以下数据",
+    "inputPlaceholder": "请输入数值",
+    "reference": {
+      "bottle": "💡 参考：普通矿泉水瓶容量为500mL，大瓶装为1.5L",
+      "daily": "💡 参考：成年人每天建议饮水量为1500-2000mL，相当于3-4瓶500mL矿泉水"
+    }
+  },
+  "food": {
+    "title": "第二部分：食品摄入",
+    "description": "食品摄入量说明",
+    "introText": "请输入日常摄入的各类食物数量",
+    "types": {
+      "milk": {
+        "name": "牛奶/软饮料",
+        "subtitle": "（如牛奶、碳酸饮料、果汁等）",
+        "data": "每升含 {0} 个微塑料",
+        "placeholder": "如牛奶、碳酸饮料、果汁等",
+        "reference": "💡 参考：普通瓶装饮料为500ml-1L，大瓶装为1.5L-2L，一盒牛奶通常为250ml"
+      },
+      "takeaway": {
+        "name": "外卖容器内食物",
+        "subtitle": "（如外卖盒饭、打包食物等）",
+        "data": "每升含 {0} 个微塑料",
+        "placeholder": "如外卖盒饭、打包食物等",
+        "reference": "💡 参考：普通外卖盒容量约为0.5L-1L，大份外卖约为1.5L-2L"
+      },
+      "honey": {
+        "name": "蜂蜜",
+        "subtitle": "（如蜂蜜、蜂王浆等）",
+        "data": "每千克含 {0} 个微塑料",
+        "placeholder": "如蜂蜜、蜂王浆等",
+        "reference": "💡 参考：普通蜂蜜瓶装为500g-1kg，小包装为100g-250g"
+      },
+      "sugar": {
+        "name": "糖",
+        "subtitle": "（如白砂糖、红糖等）",
+        "data": "每千克含 {0} 个微塑料",
+        "placeholder": "如白砂糖、红糖等",
+        "reference": "💡 参考：普通糖包为5g-10g，家庭装为500g-1kg"
+      },
+      "salt": {
+        "name": "食盐（海盐）",
+        "subtitle": "（如海盐、食用盐等）",
+        "data": "每千克含 {0} 个微塑料",
+        "placeholder": "如海盐、食用盐等",
+        "reference": "💡 参考：普通盐包为5g-10g，家庭装为500g-1kg，成年人每日建议摄入量不超过6g"
+      },
+      "rice": {
+        "name": "生米",
+        "subtitle": "（如普通大米、糙米等）",
+        "data": "每100克含 {0} 个微塑料",
+        "placeholder": "如普通大米、糙米等",
+        "reference": "💡 参考：一碗米饭约150g-200g，一袋大米通常为5kg-10kg"
+      },
+      "instantRice": {
+        "name": "速熟米（即食类）",
+        "subtitle": "（如即食米饭、方便米饭等）",
+        "data": "每100克含 {0} 个微塑料",
+        "placeholder": "如即食米饭、方便米饭等",
+        "reference": "💡 参考：一包速熟米通常为100g-200g，即食米饭盒装约为200g-300g"
+      }
+    }
+  },
+  "air": {
+    "title": "第三部分：空气暴露",
+    "infoTitle": "空气暴露说明",
+    "introText": "请输入您的体重和生活区域类型，将以此为依据计算您的每日微塑料摄入量",
+    "breathingTitle": "呼吸量计算",
+    "breathingSubtitle": "（基于体重计算）",
+    "breathingData": "每千克体重每天呼吸量约为",
+    "liters": "升",
+    "microplasticsTitle": "空气微塑料含量",
+    "microplasticsSubtitle": "（不同区域含量不同）",
+    "cityData": "城市区域：每升空气含",
+    "suburbData": "郊区：每升空气含",
+    "coastalData": "沿海地区：每升空气含",
+    "particlesPerLiter": "个微塑料",
+    "weightLabel": "体重（kg）",
+    "weightPlaceholder": "请输入体重",
+    "areaTypeLabel": "生活区域类型",
+    "cityArea": "城市区域",
+    "suburbArea": "郊区",
+    "coastalArea": "沿海地区",
+    "areaReference": "参考：城市区域包括商业区、住宅区等；郊区包括城乡结合部、卫星城等；沿海地区包括海滨城市、港口等",
+    "errors": {
+      "weightRequired": "请输入体重",
+      "weightInvalid": "请输入大于等于0的数字",
+      "areaTypeRequired": "请选择生活区域类型"
+    },
+    "types": {
+      "breathing": {
+        "name": "呼吸量计算",
+        "subtitle": "（基于体重计算）",
+        "data": "每千克体重每天呼吸量约为 {0} 升"
+      },
+      "airContent": {
+        "name": "空气微塑料含量",
+        "subtitle": "（不同区域含量不同）",
+        "data": {
+          "city": "城市区域：每升空气含 {0} 个微塑料",
+          "suburb": "郊区：每升空气含 {0} 个微塑料",
+          "coastal": "沿海地区：每升空气含 {0} 个微塑料"
+        }
+      }
+    },
+    "areaTypes": {
+      "city": "城市区域",
+      "suburb": "郊区",
+      "coastal": "沿海地区"
+    }
+  },
+  "dailyItems": {
+    "title": "第四部分：日用品释放",
+    "description": "日用品释放说明",
+    "introText": "请输入以下使用频次：",
+    "types": {
+      "teaBags": {
+        "name": "塑料茶包饮用",
+        "subtitle": "（如袋泡茶、茶包等）",
+        "data": "每杯释放 {0} 个微塑料",
+        "label": "您饮用塑料茶包泡出的茶水量（杯/日）",
+        "placeholder": "请输入您饮用的杯数",
+        "unit": "杯",
+        "reference": "💡 参考：1杯≈200~250ml，茶包复用情况：若1个茶包泡多次，请按实际饮用杯数计算"
+      },
+      "plasticUtensils": {
+        "name": "塑料餐具使用",
+        "subtitle": "（如一次性餐具、塑料餐盒等）",
+        "data": "每次平均释放 {0} 个微塑料",
+        "label": "塑料餐具使用次数（次/日）",
+        "placeholder": "输入次数",
+        "unit": "次",
+        "reference": "💡 参考：包括一次性筷子、勺子、叉子、餐盒等塑料餐具的使用次数"
+      }
+    }
+  },
+  "clothing": {
+    "title": "第五部分：衣物与纺织品",
+    "description": "衣物与纺织品说明",
+    "introText": "请输入您的衣物和家居纺织品使用情况：",
+    "types": {
+      "cotton": {
+        "name": "家中衣物总量",
+        "subtitle": "（如T恤、衬衫、裤子等）",
+        "data": "每件每天释放 {0} 个微塑料",
+        "label": "家中衣物总量（件）",
+        "placeholder": "请输入家中衣物总量",
+        "unit": "件",
+        "reference": "💡 参考：包括T恤、衬衫、裤子、运动服、外套、内衣等天然纤维和合成纤维制成的衣物"
+      },
+      "carpetArea": {
+        "name": "地毯面积",
+        "subtitle": "（如客厅、卧室地毯）",
+        "data": "每平方米每天释放 {0} 个微塑料",
+        "label": "家中地毯总面积（平方米）",
+        "placeholder": "家中地毯总面积",
+        "unit": "平方米",
+        "reference": "💡 参考：普通卧室地毯约4-6m²，客厅地毯约8-12m²"
+      }
+    }
+  },
+  "diet": {
+    "title": "第六部分：饮食习惯",
+    "description": "饮食习惯说明",
+    "introText": "请输入您的饮食习惯相关信息：",
+    "types": {
+      "seafood": {
+        "name": "海鲜",
+        "subtitle": "（如鱼类、贝类等）",
+        "data": "每克含 {0} 个微塑料",
+        "label": "海鲜（克/月）",
+        "placeholder": "每月食用海鲜量",
+        "unit": "克",
+        "reference": "💡 参考：一条普通大小的鱼约200-300g，建议根据实际食用量填写"
+      },
+      "beer": {
+        "name": "啤酒",
+        "subtitle": "（如瓶装啤酒、罐装啤酒等）",
+        "data": "每升含 {0} 个微塑料",
+        "label": "啤酒（升/月）",
+        "placeholder": "每月饮用啤酒量",
+        "unit": "升",
+        "reference": "💡 参考：一瓶普通啤酒约330ml，一罐啤酒约500ml，建议根据实际饮用量填写"
+      }
+    }
+  },
+  "result": {
+    "title": "微塑料摄入分析报告",
+    "overall": {
+      "title": "总体评估",
+      "summary": "🎉 根据分析，以下是您的微塑料摄入情况："
+    },
+    "chart": {
+      "title": "微塑料摄入来源分布",
+      "subtitle": "各来源占比分析",
+      "seriesName": "微塑料摄入来源",
+      "others": "其他来源"
+    },
+    "total": {
+      "title": "总微塑料摄入量",
+      "unit": "个"
+    },
+    "comparison": {
+      "below": "您的微塑料摄入量低于全球平均水平",
+      "above": "您的微塑料摄入量超过全球平均水平{0}%",
+      "average": "全球人均每日摄入量：286个"
+    },
+    "analysis": {
+      "title": "摄入分析",
+      "loading": "AI正在分析中...",
+      "error": "获取AI分析失败",
+      "errorMessage": "获取分析结果失败，请点击重试按钮",
+      "prompt": "请根据以下数据进行分析（字数限制在150字以内）：\n总微塑料摄入量：{total}个/天\n主要来源：\n{sources}\n\n请重点分析：\n1. 主要摄入来源及其危害程度\n2. 潜在的健康风险评估\n3. 与普通人群的对比分析"
+    },
+    "tips": {
+      "title": "健康建议",
+      "loading": "正在生成健康建议...",
+      "error": "获取健康建议失败",
+      "errorMessage": "获取健康建议失败，请点击重试按钮",
+      "prompt": "请根据以下数据给出具体可行的改善建议（字数限制在150字以内）：\n总微塑料摄入量：{total}个/天\n各来源占比：\n{sources}\n\n请给出：\n1. 针对TOP3来源的具体减少方案\n2. 日常生活中的可执行措施\n3. 长期改善计划建议"
+    },
+    "ai": {
+      "title": "AI分析助手",
+      "placeholder": "输入你摄入的微塑料数据...",
+      "submit": "提交",
+      "loading": "AI 正在分析...",
+      "waiting": "等待回复...",
+      "error": "错误：{0}",
+      "retryError": "分析失败（已重试{0}次）：{1}",
+      "systemPrompt": "你是一个专业的微塑料健康评估助手。",
+      "userPrompt": "请根据以下问题给出分析（字数限制在100字以内）：\n{0}"
+    },
+    "navigation": {
+      "previous": "返回修改",
+      "restart": "重新开始"
+    },
+    "categories": {
+      "water": "环境水源",
+      "food": "食品摄入",
+      "air": "空气暴露",
+      "dailyItems": "日用品释放",
+      "clothing": "衣物与纺织品",
+      "diet": "饮食习惯",
+      "total": "总计"
+    }
+  }
+} 

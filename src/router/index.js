@@ -15,7 +15,7 @@ const routes = [
     component: Introduction
   },
   {
-    path: '/water',
+    path: '/water-source',
     name: 'WaterSource',
     component: WaterSource
   },
@@ -52,7 +52,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 

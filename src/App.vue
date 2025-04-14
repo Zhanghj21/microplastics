@@ -5,14 +5,9 @@
       <div class="banner-content">
         <div class="logo">
           <span class="icon">🔬</span>
-          <h1>微塑料健康评估</h1>
+          <h1 :class="{ 'en-title': locale === 'en' }">{{ $t('introduction.title') }}</h1>
         </div>
-        <div class="language-selector">
-          <select v-model="selectedLanguage" @change="changeLanguage">
-            <option value="zh">中文</option>
-            <option value="en">English</option>
-          </select>
-        </div>
+        <LanguageSwitch class="language-switch" />
       </div>
     </div>
 
@@ -35,40 +30,45 @@
     <footer class="footer">
       <div class="footer-content">
         <div class="footer-section">
-          <h4>关于我们</h4>
-          <p>致力于提供准确的微塑料暴露评估，帮助您了解日常生活中的微塑料摄入情况。</p>
+          <h4>{{ $t('footer.about') }}</h4>
+          <p>{{ $t('footer.aboutDesc') }}</p>
         </div>
         <div class="footer-section">
-          <h4>联系方式</h4>
+          <h4>{{ $t('footer.contact') }}</h4>
           <p>📧 Email: plasticountai@163.com</p>
-          <p>📱 Tel: +86 123-4567-8900</p>
+          <p>📱 Tel: +86 13901921755</p>
         </div>
         <div class="footer-section">
-          <h4>友情链接</h4>
+          <h4>{{ $t('footer.links') }}</h4>
           <div class="footer-links">
-            <a href="https://www.epa.gov/" target="_blank">环境保护署（EPA，美国）</a>
-            <a href="https://www.who.int" target="_blank">世界卫生组织（WHO）</a>
-            <a href="https://oceana.org" target="_blank">海洋保护协会（Oceana）</a>
+            <a href="https://www.epa.gov/" target="_blank">{{ $t('footer.epa') }}</a>
+            <a href="https://www.who.int" target="_blank">{{ $t('footer.who') }}</a>
+            <a href="https://oceana.org" target="_blank">{{ $t('footer.oceana') }}</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2024 微塑料健康评估系统 版权所有</p>
+        <p>© 2024 {{ $t('footer.copyright') }}</p>
       </div>
     </footer>
   </div>
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import LanguageSwitch from './components/LanguageSwitch.vue'
 
 export default {
   name: 'App',
+  components: {
+    LanguageSwitch
+  },
   setup() {
     const route = useRoute()
     const mainContent = ref(null)
-    const selectedLanguage = ref('zh')
+    const { locale } = useI18n()
     
     const routeSteps = {
       'introduction': 0,
@@ -102,10 +102,12 @@ export default {
       window.scrollTo(0, 0)
     }
 
-    const changeLanguage = () => {
-      // 这里可以添加语言切换的逻辑
-      console.log('Language changed to:', selectedLanguage.value)
-    }
+    onMounted(() => {
+      const savedLocale = localStorage.getItem('locale')
+      if (savedLocale) {
+        locale.value = savedLocale
+      }
+    })
 
     return {
       currentStep,
@@ -113,8 +115,7 @@ export default {
       showProgress,
       mainContent,
       scrollToTop,
-      selectedLanguage,
-      changeLanguage
+      locale
     }
   }
 }
@@ -155,35 +156,31 @@ body {
 .banner {
   background: linear-gradient(135deg, var(--tiffany-dark) 0%, var(--tiffany-blue) 100%);
   color: white;
-  padding: 0;
+  height: 80px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 100;
-  height: 80px; /* 设置固定高度 */
 }
 
 .banner-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   position: relative;
-  height: 100%; /* 继承父元素高度 */
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  height: 100%;
 }
 
 .icon {
@@ -197,41 +194,30 @@ body {
   margin: 0;
   font-size: var(--font-size-xl);
   font-weight: bold;
-  padding: 8px 0;
+  padding: 0;
+  white-space: pre-line;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
-.language-selector {
-  display: none;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
+.logo h1.en-title {
+  font-size: calc(var(--font-size-xl) * 0.9);
+}
+
+.language-switch {
   position: absolute;
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
 }
 
-.language-selector select {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: var(--font-size-base);
-  cursor: pointer;
-  outline: none;
-}
-
-.language-selector select option {
-  background: var(--tiffany-dark);
-  color: white;
-}
-
 /* 主要内容区域 */
 .main-content {
   flex: 1 0 auto;
   padding: 20px;
-  margin-top: 100px; /* 根据banner高度调整 */
+  margin-top: 100px;
   margin-bottom: 40px;
   min-height: auto;
   overflow-y: auto;
@@ -301,7 +287,7 @@ body {
 /* 进度条样式 */
 .progress-bar {
   position: fixed;
-  top: 80px; /* 根据banner高度调整 */
+  top: 90px;
   left: 0;
   width: 100%;
   height: 4px;
@@ -318,7 +304,7 @@ body {
 
 .page-indicator {
   position: fixed;
-  top: 90px; /* 根据banner高度调整 */
+  top: 100px;
   right: 20px;
   background: var(--tiffany-dark);
   color: white;
@@ -339,39 +325,6 @@ body {
   opacity: 0;
 }
 
-/* 全局输入框样式 */
-input {
-  font-size: var(--font-size-lg) !important;
-}
-
-/* 全局标签样式 */
-label {
-  font-size: var(--font-size-lg) !important;
-}
-
-/* 全局按钮样式 */
-button {
-  font-size: var(--font-size-lg) !important;
-}
-
-/* 全局标题样式 */
-h1 {
-  font-size: var(--font-size-xxl) !important;
-}
-
-h2 {
-  font-size: var(--font-size-xl) !important;
-}
-
-h3 {
-  font-size: var(--font-size-lg) !important;
-}
-
-/* 全局文本样式 */
-p {
-  font-size: var(--font-size-lg) !important;
-}
-
 /* 响应式设计 */
 @media (max-width: 768px) {
   :root {
@@ -382,20 +335,33 @@ p {
   }
 
   .banner {
-    height: 60px; /* 移动端更小的高度 */
+    height: 60px;
+  }
+
+  .logo {
+    flex-direction: row;
+    align-items: center;
   }
 
   .logo h1 {
-    padding: 5px 0;
+    font-size: var(--font-size-lg);
   }
 
-  .language-selector select {
-    font-size: var(--font-size-base);
-    padding: 2px 4px;
+  .logo h1.en-title {
+    font-size: calc(var(--font-size-lg) * 0.9);
+  }
+
+  .language-switch {
+    position: relative;
+    right: 0;
+    top: 0;
+    transform: none;
   }
 
   .main-content {
-    margin-top: 80px; /* 移动端更小的margin */
+    padding: 10px;
+    margin-top: 80px;
+    margin-bottom: 20px;
   }
 
   .footer-content {
@@ -412,12 +378,14 @@ p {
     align-items: center;
   }
 
-  .progress-bar {
-    top: 60px; /* 移动端进度条位置 */
+  .page-indicator {
+    font-size: var(--font-size-base);
+    padding: 2px 8px;
+    top: 80px;
   }
 
-  .page-indicator {
-    top: 70px; /* 移动端页码指示器位置 */
+  .progress-bar {
+    top: 70px;
   }
 }
 </style> 
