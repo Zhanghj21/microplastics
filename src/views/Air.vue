@@ -21,9 +21,9 @@
             <div class="card-icon">🏙️</div>
             <h3>{{ $t('air.microplasticsTitle') }}</h3>
             <p class="subtitle">{{ $t('air.microplasticsSubtitle') }}</p>
-            <p class="description">{{ $t('air.cityData') }} <strong>850</strong> {{ $t('air.particlesPerLiter') }}</p>
-            <p class="description">{{ $t('air.suburbData') }} <strong>400</strong> {{ $t('air.particlesPerLiter') }}</p>
-            <p class="description">{{ $t('air.coastalData') }} <strong>550</strong> {{ $t('air.particlesPerLiter') }}</p>
+            <p class="description">{{ $t('air.cityData') }} <strong>0.08</strong> {{ $t('air.particlesPerLiter') }}</p>
+            <p class="description">{{ $t('air.suburbData') }} <strong>0.04</strong> {{ $t('air.particlesPerLiter') }}</p>
+            <p class="description">{{ $t('air.coastalData') }} <strong>0.02</strong> {{ $t('air.particlesPerLiter') }}</p>
           </div>
         </div>
       </div>

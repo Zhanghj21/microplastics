@@ -166,13 +166,13 @@ export const rates = {
     treated: 5      // 每100毫升含46个微塑料
   },
   food: {
-    milk: 12,          // 每升含40个微塑料
-    takeaway: 14,   // 每升含68000个微塑料
-    honey: 9.66,        // 每千克含166个微塑料
-    sugar: 13.17,        // 每千克含217个微塑料
-    salt: 12.15,       // 每千克含615.5个微塑料
-    rice: 14.2,         // 每100克含712个微塑料
-    instantRice: 25.6  // 每100克含2560个微塑料
+    milk: 24,          // 每升含24个微塑料
+    takeaway: 28,   // 每升含28个微塑料
+    honey: 14,        // 每千克含14个微塑料
+    sugar: 15,        // 每千克含15个微塑料
+    salt: 14,       // 每千克含14个微塑料
+    rice: 24,         // 每100克含24个微塑料
+    instantRice: 35  // 每100克含35个微塑料
   },
   air: {
     city: 0.08,         // 城市区域每升含850个微塑料
@@ -180,8 +180,8 @@ export const rates = {
     coastal: 0.02       // 沿海地区每升含550个微塑料
   },
   dailyItems: {
-    teaBags: 2,
-    plasticUtensils: 1
+    teaBags: 2,        // 每杯茶包释放2个微塑料
+    plasticUtensils: 3  // 每次塑料餐具释放3个微塑料
   },
   clothing: {
     cotton: 4,       // 每件棉质衣物每天释放400个微塑料
@@ -192,6 +192,7 @@ export const rates = {
     beer: 21           // 每升啤酒含21个微塑料
   }
 }
+
 
 function calculateWaterPlastics(waterData) {
   const { purified, untreated, treated } = waterData

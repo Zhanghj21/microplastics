@@ -14,14 +14,14 @@
             <div class="card-icon">🍵</div>
             <h3>{{ $t('dailyItems.types.teaBags.name') }}</h3>
             <p class="subtitle">{{ $t('dailyItems.types.teaBags.subtitle') }}</p>
-            <p class="description">{{ $t('dailyItems.types.teaBags.data', [2000]) }}</p>
+            <p class="description">{{ $t('dailyItems.types.teaBags.data', [2]) }}</p>
           </div>
           
           <div class="info-card">
             <div class="card-icon">🥢</div>
             <h3>{{ $t('dailyItems.types.plasticUtensils.name') }}</h3>
             <p class="subtitle">{{ $t('dailyItems.types.plasticUtensils.subtitle') }}</p>
-            <p class="description">{{ $t('dailyItems.types.plasticUtensils.data', [125]) }}</p>
+            <p class="description">{{ $t('dailyItems.types.plasticUtensils.data', [3]) }}</p>
           </div>
         </div>
       </div>
