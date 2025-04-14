@@ -118,9 +118,9 @@ export default {
   },
   data() {
     return {
-      tapWater: '',
-      bottledWater: '',
-      otherWater: '',
+      tapWater: this.$store.state.waterData.purified || '',
+      bottledWater: this.$store.state.waterData.untreated || '',
+      otherWater: this.$store.state.waterData.treated || '',
       errors: {
         tapWater: '',
         bottledWater: '',

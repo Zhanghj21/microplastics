@@ -1,4 +1,10 @@
 {
+  "common": {
+    "error": {
+      "number": "请输入有效的数字",
+      "integer": "请输入整数"
+    }
+  },
   "food": {
     "title": "食品摄入",
     "description": "请输入您每天摄入的各类食品数量（克）",

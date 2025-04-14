@@ -111,14 +111,27 @@ export default {
         return
       }
       
+      // 检查是否包含非数字字符（除了小数点）
+      if (!/^\d*\.?\d*$/.test(value)) {
+        errors[field] = t('common.error.number')
+        return
+      }
+      
+      // 检查是否超过一个小数点
+      if ((value.match(/\./g) || []).length > 1) {
+        errors[field] = t('common.error.number')
+        return
+      }
+      
       const num = parseFloat(value)
       if (isNaN(num) || num < 0) {
         errors[field] = t('common.error.number')
         return
       }
       
+      // 检查是否为整数
       if (!Number.isInteger(num)) {
-        errors[field] = t('common.error.integer')
+        errors[field] = t('common.integerError')
         return
       }
       

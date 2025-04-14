@@ -1,4 +1,10 @@
 {
+  "common": {
+    "error": {
+      "number": "Please enter a valid number",
+      "integer": "Please enter an integer"
+    }
+  },
   "food": {
     "title": "Food Intake",
     "description": "Please enter your daily intake of various foods (grams)",
